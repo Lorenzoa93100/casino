@@ -351,7 +351,13 @@ export function advancePhase(game) {
       winnerName: winnerEval.player.name,
       handName: winnerEval.hand.name,
       pot: newGame.pot,
-      evaluations: evaluated.map(e => ({ playerId: e.player.id, playerName: e.player.name, handName: e.hand.name })),
+      evaluations: evaluated.map(e => ({
+        playerId: e.player.id,
+        playerName: e.player.name,
+        handName: e.hand.name,
+        handRank: e.hand.rank,
+        isWinner: e.player.id === winnerEval.player.id,
+      })),
     };
     newGame.log = [...newGame.log.slice(-7), `🏆 ${winnerEval.player.name} gagne ${newGame.pot} chips avec ${winnerEval.hand.name}`];
     return newGame;

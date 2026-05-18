@@ -1,6 +1,123 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createGame, applyAction, botDecide } from './engine.js';
 
+const HAND_DESCRIPTIONS = {
+  'Quinte Flush Royale': 'A K Q J 10 de la même couleur — main absolue',
+  'Quinte Flush':        '5 cartes consécutives de même couleur',
+  'Carré':               '4 cartes de même valeur',
+  'Full House':          'Brelan + paire',
+  'Couleur':             '5 cartes de la même couleur',
+  'Quinte':              '5 cartes consécutives',
+  'Brelan':              '3 cartes de même valeur',
+  'Deux Paires':         '2 paires différentes',
+  'Paire':               '2 cartes de même valeur',
+  'Hauteur':             'Aucune combinaison — la carte la plus haute joue',
+};
+
+const RANK_LABELS = ['0','1','2','3','4','5','6','7','8','9'];
+
+function ShowdownResult({ result, onNextHand }) {
+  if (!result) return null;
+
+  if (result.forced) {
+    return (
+      <div style={{ background:'#0f0f23', border:'1px solid #c9a22730', borderRadius:12, padding:16, textAlign:'center' }}>
+        <div style={{ fontSize:22, marginBottom:6 }}>🏆</div>
+        <div style={{ fontSize:14, color:'#c9a227', fontWeight:700, marginBottom:4 }}>
+          {result.winnerName} remporte {result.pot} chips
+        </div>
+        <div style={{ fontSize:12, color:'#64748b', marginBottom:14 }}>Tous les autres joueurs ont foldé.</div>
+        <button onClick={onNextHand} style={nextBtnStyle}>Main suivante →</button>
+      </div>
+    );
+  }
+
+  const evals = result.evaluations || [];
+  const winner = evals.find(e => e.isWinner);
+  const losers = evals.filter(e => !e.isWinner);
+  const desc = HAND_DESCRIPTIONS[winner?.handName] || '';
+
+  // Build explanation sentence
+  let explanation = '';
+  if (winner && losers.length > 0) {
+    const loserText = losers.map(l => `${l.handName} (rang ${l.handRank})`).join(' et ');
+    explanation = `La ${winner.handName} (rang ${winner.handRank}/9) bat ${loserText}.`;
+    if (desc) explanation += ` — ${desc}.`;
+  }
+
+  return (
+    <div style={{ background:'#0f0f23', border:'1px solid #c9a22730', borderRadius:12, padding:16 }}>
+      {/* Winner banner */}
+      <div style={{ textAlign:'center', marginBottom:14 }}>
+        <div style={{ fontSize:26, marginBottom:4 }}>🏆</div>
+        <div style={{ fontSize:15, color:'#c9a227', fontWeight:700 }}>
+          {result.winnerName} remporte {result.pot} chips
+        </div>
+      </div>
+
+      {/* Hands comparison table */}
+      {evals.length > 0 && (
+        <div style={{ marginBottom:14 }}>
+          <div style={{ fontSize:10, color:'#64748b', textTransform:'uppercase', letterSpacing:1, marginBottom:8 }}>
+            Résultat des mains
+          </div>
+          {evals.map((e, i) => (
+            <div key={e.playerId} style={{
+              display:'flex', alignItems:'center', justifyContent:'space-between',
+              padding:'7px 10px', borderRadius:8, marginBottom:4,
+              background: e.isWinner ? '#c9a22715' : '#0a0a1a',
+              border: `1px solid ${e.isWinner ? '#c9a22740' : '#1e1e3a'}`,
+            }}>
+              <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                <span style={{ fontSize:14 }}>{e.isWinner ? '🥇' : i === 1 ? '🥈' : '🥉'}</span>
+                <span style={{ fontSize:13, fontWeight:600, color: e.isWinner ? '#c9a227' : '#94a3b8' }}>
+                  {e.playerName}
+                </span>
+              </div>
+              <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                <span style={{ fontSize:12, color: e.isWinner ? '#e2e8f0' : '#64748b', fontWeight: e.isWinner ? 700 : 400 }}>
+                  {e.handName}
+                </span>
+                <span style={{
+                  fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:10,
+                  background: e.isWinner ? '#c9a22730' : '#1e1e3a',
+                  color: e.isWinner ? '#c9a227' : '#64748b',
+                }}>
+                  rang {e.handRank}/9
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Explanation */}
+      {explanation && (
+        <div style={{
+          background:'#c9a22710', border:'1px solid #c9a22730',
+          borderRadius:8, padding:'10px 12px', marginBottom:14,
+        }}>
+          <div style={{ fontSize:10, color:'#c9a227', textTransform:'uppercase', letterSpacing:1, marginBottom:4 }}>
+            💡 Pourquoi cette main gagne
+          </div>
+          <p style={{ fontSize:12, color:'#cbd5e1', lineHeight:1.6 }}>{explanation}</p>
+        </div>
+      )}
+
+      <div style={{ textAlign:'center' }}>
+        <button onClick={onNextHand} style={nextBtnStyle}>Main suivante →</button>
+      </div>
+    </div>
+  );
+}
+
+const nextBtnStyle = {
+  background:'#c9a227', color:'#0a0a1a', border:'none',
+  borderRadius:10, padding:'12px 28px',
+  fontSize:14, fontWeight:700, cursor:'pointer',
+  fontFamily:"'DM Sans', sans-serif",
+};
+
 // ─── Card components ──────────────────────────────────────────────────────────
 
 const CARD_W = 44;
@@ -507,35 +624,7 @@ function GameScreen({ game, setGame, onBack, onNextHand }) {
         {/* Action buttons or showdown result */}
         <div style={{ width: '100%', maxWidth: 480 }}>
           {isShowdown && result ? (
-            <div style={{
-              background: '#0f0f23', border: '1px solid #c9a22730',
-              borderRadius: 12, padding: 16, textAlign: 'center',
-            }}>
-              <div style={{ fontSize: 13, color: '#c9a227', fontWeight: 700, marginBottom: 6 }}>
-                {result.winnerId === human.id ? '🎉 Vous gagnez !' : `${result.winnerName} gagne !`}
-              </div>
-              {!result.forced && result.handName && (
-                <div style={{ fontSize: 12, color: '#94a3b8', marginBottom: 12 }}>
-                  avec <span style={{ color: '#e2e8f0', fontWeight: 600 }}>{result.handName}</span> — pot: {result.pot}
-                </div>
-              )}
-              {result.forced && (
-                <div style={{ fontSize: 12, color: '#94a3b8', marginBottom: 12 }}>
-                  Tous les autres ont foldé — pot: {result.pot}
-                </div>
-              )}
-              <button
-                onClick={onNextHand}
-                style={{
-                  background: '#c9a227', color: '#0a0a1a', border: 'none',
-                  borderRadius: 10, padding: '12px 28px',
-                  fontSize: 14, fontWeight: 700, cursor: 'pointer',
-                  fontFamily: "'DM Sans', sans-serif",
-                }}
-              >
-                Main suivante →
-              </button>
-            </div>
+            <ShowdownResult result={result} onNextHand={onNextHand} />
           ) : isHumanTurn ? (
             <ActionBar game={game} onAction={handleAction} disabled={false} />
           ) : (
