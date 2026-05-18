@@ -1,5 +1,77 @@
 import { useState, useEffect, useCallback } from 'react';
-import { createGame, applyAction, botDecide } from './engine.js';
+import { createGame, applyAction, botDecide, bestHand } from './engine.js';
+
+// ─── Hint system ──────────────────────────────────────────────────────────────
+
+function getHint(game, playerId) {
+  const player = game.players.find(p => p.id === playerId);
+  if (!player || player.folded) return null;
+
+  const callAmt = Math.max(0, game.currentBet - player.roundBet);
+  const canCheck = callAmt === 0;
+  const potOdds = game.pot + callAmt > 0 ? callAmt / (game.pot + callAmt) : 0;
+  const allCards = [...player.holeCards, ...game.communityCards];
+  const hand = allCards.length >= 5 ? bestHand(allCards) : null;
+  const rank = hand ? hand.rank : -1;
+
+  // Pre-flop (no community cards yet)
+  if (game.communityCards.length === 0) {
+    const [c1, c2] = player.holeCards;
+    const v1 = Math.max(c1.v, c2.v), v2 = Math.min(c1.v, c2.v);
+    const isPair = v1 === v2, isSuited = c1.s === c2.s, gap = v1 - v2;
+    const isHighPair = isPair && v1 >= 10;
+    const isAce = v1 === 14;
+
+    if (isHighPair)
+      return { action: 'raise', text: `Paire de ${c1.r} pré-flop — main très forte. Relancez 3x les blindes pour isoler.` };
+    if (isPair && v1 >= 7)
+      return { action: 'raise', text: `Paire de ${c1.r} — bonne main. Relancez ou suivez selon la pression.` };
+    if (isPair)
+      return { action: canCheck ? 'check' : 'call', text: `Petite paire — jouez prudemment, cherchez un brelan au flop.` };
+    if (isAce && v2 >= 10)
+      return { action: 'raise', text: `${c1.r}${c1.s} ${c2.r}${c2.s} — très forte main. Relancez.` };
+    if (isAce && isSuited)
+      return { action: 'call', text: `As assorti — bon potentiel de couleur. Suivez ou relancez légèrement.` };
+    if (v1 >= 11 && v2 >= 10)
+      return { action: 'raise', text: `Deux hautes cartes connectées — relancez.` };
+    if (isSuited && gap <= 2 && v1 >= 9)
+      return { action: 'call', text: `Connecteurs assortis — main spéculative intéressante. Suivez si la mise est raisonnable.` };
+    if (v1 >= 10 && canCheck)
+      return { action: 'check', text: `Main correcte — checkez pour voir le flop sans risque.` };
+    if (v1 >= 10)
+      return { action: 'call', text: `Carte haute — vous pouvez suivre si la mise n'est pas trop grosse.` };
+    if (!canCheck && callAmt > game.pot * 0.4)
+      return { action: 'fold', text: `Main faible face à une grosse mise — couchez-vous, le risque ne vaut pas.` };
+    return { action: canCheck ? 'check' : 'fold', text: canCheck ? `Main faible — checkez gratuitement.` : `Main trop faible — couchez-vous.` };
+  }
+
+  // Post-flop
+  if (rank >= 6)
+    return { action: 'raise', text: `${hand.name} — main dominante ! Relancez fort pour maximiser le pot.` };
+  if (rank === 5)
+    return { action: 'raise', text: `${hand.name} — très forte. Misez entre 50-75% du pot.` };
+  if (rank === 4)
+    return { action: canCheck ? 'raise' : 'call', text: `${hand.name} — bonne main. ${canCheck ? 'Misez pour faire payer les draws adverses.' : 'Suivez la mise.'}` };
+  if (rank === 3)
+    return { action: canCheck ? 'raise' : 'call', text: `${hand.name} — main solide. ${canCheck ? 'Value-bet : misez 30-50% du pot.' : 'Suivez.'}` };
+  if (rank === 2) {
+    if (canCheck) return { action: 'check', text: `${hand.name} — main correcte mais vulnérable. Checkez pour contrôler le pot.` };
+    if (potOdds < 0.3) return { action: 'call', text: `${hand.name} — pot odds favorables, vous pouvez suivre.` };
+    return { action: 'fold', text: `${hand.name} — face à une grosse mise, couchez-vous prudemment.` };
+  }
+  if (rank === 1) {
+    if (canCheck) return { action: 'check', text: `${hand.name} — main faible. Checkez pour voir la suite gratuitement.` };
+    if (potOdds < 0.2) return { action: 'call', text: `${hand.name} — petite paire. Suivez uniquement si la mise est minime.` };
+    return { action: 'fold', text: `${hand.name} — trop risqué avec cette mise, couchez-vous.` };
+  }
+  // Rank 0: nothing
+  if (canCheck) return { action: 'check', text: `Aucune combinaison pour l'instant — checkez et espérez vous améliorer.` };
+  if (potOdds < 0.15) return { action: 'call', text: `Rien en main mais pot odds très favorables — tentez votre chance.` };
+  return { action: 'fold', text: `Aucune combinaison face à une mise — couchez-vous et attendez une meilleure main.` };
+}
+
+const ACTION_COLORS = { raise: '#c9a227', call: '#22c55e', check: '#3b82f6', fold: '#ef4444' };
+const ACTION_LABELS = { raise: 'Relancez', call: 'Suivez', check: 'Checkez', fold: 'Couchez-vous' };
 
 const HAND_DESCRIPTIONS = {
   'Quinte Flush Royale': 'A K Q J 10 de la même couleur — main absolue',
@@ -475,6 +547,7 @@ function ActionBar({ game, onAction, disabled }) {
 
 function GameScreen({ game, setGame, onBack, onNextHand }) {
   const [botThinking, setBotThinking] = useState(false);
+  const [showHint, setShowHint] = useState(false);
 
   const human = game.players.find(p => !p.isBot);
   const isHumanTurn = game.currentPlayerId === human.id && game.phase !== 'showdown';
@@ -629,7 +702,48 @@ function GameScreen({ game, setGame, onBack, onNextHand }) {
           {isShowdown && result ? (
             <ShowdownResult result={result} onNextHand={onNextHand} />
           ) : isHumanTurn ? (
-            <ActionBar game={game} onAction={handleAction} disabled={false} />
+            <div>
+              {/* Hint panel */}
+              {showHint && (() => {
+                const hint = getHint(game, human.id);
+                return hint ? (
+                  <div style={{
+                    background: '#0f0f23', border: `1px solid ${ACTION_COLORS[hint.action]}50`,
+                    borderRadius: 10, padding: '12px 14px', marginBottom: 10,
+                    position: 'relative',
+                  }}>
+                    <button onClick={() => setShowHint(false)} style={{
+                      position: 'absolute', top: 8, right: 10,
+                      background: 'none', border: 'none', color: '#64748b',
+                      cursor: 'pointer', fontSize: 14, lineHeight: 1,
+                    }}>✕</button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                      <span style={{ fontSize: 11, color: '#64748b', textTransform: 'uppercase', letterSpacing: 1 }}>💡 Conseil</span>
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10,
+                        background: ACTION_COLORS[hint.action] + '25',
+                        color: ACTION_COLORS[hint.action],
+                      }}>
+                        {ACTION_LABELS[hint.action]}
+                      </span>
+                    </div>
+                    <p style={{ fontSize: 12, color: '#cbd5e1', lineHeight: 1.6, paddingRight: 20 }}>{hint.text}</p>
+                  </div>
+                ) : null;
+              })()}
+              <ActionBar game={game} onAction={(a, amt) => { setShowHint(false); handleAction(a, amt); }} disabled={false} />
+              {/* Hint button */}
+              <button onClick={() => setShowHint(h => !h)} style={{
+                width: '100%', marginTop: 8,
+                background: showHint ? '#1e1e3a' : 'none',
+                border: '1px dashed #c9a22740', color: '#c9a22790',
+                borderRadius: 8, padding: '8px', fontSize: 12,
+                cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
+                transition: 'all 0.15s',
+              }}>
+                💡 {showHint ? 'Masquer le conseil' : 'Afficher un conseil (débutant)'}
+              </button>
+            </div>
           ) : (
             <div style={{
               background: '#0f0f23', borderRadius: 10, padding: '14px',
