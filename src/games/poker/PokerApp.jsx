@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PokerGame from "./PokerGame.jsx";
 
 const SUIT_COLORS = { "♠": "#e2e8f0", "♥": "#f87171", "♦": "#f87171", "♣": "#e2e8f0" };
 
@@ -166,6 +167,7 @@ export default function PokerApp() {
     { id: "positions", label: "Positions", icon: "🎯" },
     { id: "glossary", label: "Glossaire", icon: "📖" },
     { id: "quiz", label: "Quiz", icon: "⚡" },
+    { id: "play", label: "Jouer", icon: "🎮" },
   ];
 
   const handleQuizAnswer = (idx) => {
@@ -596,6 +598,9 @@ export default function PokerApp() {
                 </button>
               </div>
             )}
+
+            {/* PLAY TAB */}
+            {tab === "play" && <PokerGame />}
 
           </div>
         </div>
