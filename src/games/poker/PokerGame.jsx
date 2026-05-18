@@ -37,11 +37,14 @@ function ShowdownResult({ result, onNextHand }) {
   const losers = evals.filter(e => !e.isWinner);
   const desc = HAND_DESCRIPTIONS[winner?.handName] || '';
 
+  // Convert internal rank (0=worst, 9=best) to display rank (1=best, 10=worst)
+  const displayRank = (r) => 10 - r;
+
   // Build explanation sentence
   let explanation = '';
   if (winner && losers.length > 0) {
-    const loserText = losers.map(l => `${l.handName} (rang ${l.handRank})`).join(' et ');
-    explanation = `La ${winner.handName} (rang ${winner.handRank}/9) bat ${loserText}.`;
+    const loserText = losers.map(l => `${l.handName} (#${displayRank(l.handRank)})`).join(' et ');
+    explanation = `La ${winner.handName} (#${displayRank(winner.handRank)}/10) bat ${loserText}.`;
     if (desc) explanation += ` — ${desc}.`;
   }
 
@@ -83,7 +86,7 @@ function ShowdownResult({ result, onNextHand }) {
                   background: e.isWinner ? '#c9a22730' : '#1e1e3a',
                   color: e.isWinner ? '#c9a227' : '#64748b',
                 }}>
-                  rang {e.handRank}/9
+                  #{displayRank(e.handRank)}/10
                 </span>
               </div>
             </div>
