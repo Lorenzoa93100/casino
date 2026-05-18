@@ -32,32 +32,7 @@ export default function App() {
   const [currentGame, setCurrentGame] = useState(null)
 
   if (currentGame === 'poker') {
-    return (
-      <div>
-        <button
-          onClick={() => setCurrentGame(null)}
-          style={{
-            position: 'fixed',
-            top: 16,
-            left: 16,
-            zIndex: 1000,
-            background: '#1e1e3a',
-            border: '1px solid #c9a22740',
-            color: '#c9a227',
-            borderRadius: 8,
-            padding: '8px 16px',
-            fontSize: 13,
-            fontWeight: 600,
-            cursor: 'pointer',
-            fontFamily: "'DM Sans', sans-serif",
-            letterSpacing: 1,
-          }}
-        >
-          ← Accueil
-        </button>
-        <PokerApp />
-      </div>
-    )
+    return <PokerApp onBack={() => setCurrentGame(null)} />
   }
 
   return (

@@ -153,7 +153,7 @@ function Card({ label }) {
   );
 }
 
-export default function PokerApp() {
+export default function PokerApp({ onBack }) {
   const [tab, setTab] = useState("hands");
   const [selectedHand, setSelectedHand] = useState(null);
   const [quizIdx, setQuizIdx] = useState(0);
@@ -320,7 +320,7 @@ export default function PokerApp() {
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <span style={{ fontSize: 30 }}>♠</span>
-            <div>
+            <div style={{ flex: 1 }}>
               <h1 style={{ fontSize: 22, fontFamily: "'DM Serif Display', serif", color: "#c9a227", lineHeight: 1.2 }}>
                 Poker School
               </h1>
@@ -328,6 +328,16 @@ export default function PokerApp() {
                 Apprends à jouer
               </p>
             </div>
+            {onBack && (
+              <button onClick={onBack} style={{
+                background: "#1e1e3a", border: "1px solid #c9a22740", color: "#c9a227",
+                borderRadius: 8, padding: "6px 14px", fontSize: 12, fontWeight: 600,
+                cursor: "pointer", fontFamily: "'DM Sans', sans-serif", letterSpacing: 1,
+                flexShrink: 0,
+              }}>
+                ← Accueil
+              </button>
+            )}
           </div>
         </div>
 
