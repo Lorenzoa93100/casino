@@ -9,7 +9,7 @@ const CARD_H = 62;
 function CardFace({ card }) {
   if (!card) return <CardSlot />;
   const isRed = card.s === '♥' || card.s === '♦';
-  const color = isRed ? '#f87171' : '#e2e8f0';
+  const color = isRed ? '#dc2626' : '#1a1a2e';
   return (
     <div style={{
       width: CARD_W, height: CARD_H, background: '#f8f8f0',
