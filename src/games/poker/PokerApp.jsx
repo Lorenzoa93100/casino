@@ -254,23 +254,22 @@ export default function PokerApp({ onBack }) {
         }
 
         @media (min-width: 768px) {
-          .poker-layout {
-            max-width: 900px;
-            margin: 0 auto;
-            min-height: 100vh;
-          }
           .poker-tabs-bar {
             display: none;
           }
           .poker-tabs-sidebar {
             display: flex;
             flex-direction: column;
-            width: 180px;
+            width: 200px;
             background: #1c2333;
             border-right: 1px solid #2d3a5a;
             padding: 16px 8px;
             gap: 4px;
             flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
           }
           .poker-inner { padding: 24px 28px; }
           .hands-grid {
@@ -304,18 +303,17 @@ export default function PokerApp({ onBack }) {
         }
 
         @media (min-width: 1100px) {
-          .poker-layout { max-width: 1100px; }
-          .poker-tabs-sidebar { width: 200px; }
-          .hands-grid { grid-template-columns: repeat(2, 1fr); }
+          .hands-grid { grid-template-columns: repeat(3, 1fr); }
         }
       `}</style>
 
       <div className="poker-layout">
         {/* Header */}
         <div style={{
-          padding: "20px 24px 16px",
-          background: "linear-gradient(180deg, #1c2333 0%, #111827 100%)",
-          borderBottom: "1px solid #c9a22720",
+          padding: "16px 20px",
+          background: "#111827",
+          borderBottom: "1px solid #2d3a5a",
+          position: "sticky", top: 0, zIndex: 10,
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <span style={{ fontSize: 30 }}>♠</span>
