@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import PokerApp from './games/poker/PokerApp.jsx'
+import BlackjackApp from './games/blackjack/BlackjackApp.jsx'
 
 const GAMES = [
   {
@@ -14,9 +15,9 @@ const GAMES = [
     id: 'blackjack',
     name: 'Blackjack',
     emoji: '🃏',
-    description: 'Bientôt disponible — stratégie de base, comptage de cartes.',
-    status: 'coming-soon',
-    color: '#8899bb',
+    description: 'Règles, stratégie de base, glossaire, quiz et jeu contre le croupier.',
+    status: 'available',
+    color: '#c9a227',
   },
   {
     id: 'roulette',
@@ -33,6 +34,9 @@ export default function App() {
 
   if (currentGame === 'poker') {
     return <PokerApp onBack={() => setCurrentGame(null)} />
+  }
+  if (currentGame === 'blackjack') {
+    return <BlackjackApp onBack={() => setCurrentGame(null)} />
   }
 
   return (
