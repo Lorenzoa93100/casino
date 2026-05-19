@@ -272,7 +272,7 @@ export default function PokerApp({ onBack }) {
             gap: 4px;
             flex-shrink: 0;
           }
-          .poker-inner { padding: 24px 28px; max-width: 680px; margin: 0 auto; }
+          .poker-inner { padding: 24px 28px; }
           .hands-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
