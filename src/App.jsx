@@ -16,7 +16,7 @@ const GAMES = [
     emoji: '🃏',
     description: 'Bientôt disponible — stratégie de base, comptage de cartes.',
     status: 'coming-soon',
-    color: '#64748b',
+    color: '#8899bb',
   },
   {
     id: 'roulette',
@@ -24,7 +24,7 @@ const GAMES = [
     emoji: '🎰',
     description: 'Bientôt disponible — comprendre les mises et probabilités.',
     status: 'coming-soon',
-    color: '#64748b',
+    color: '#8899bb',
   },
 ]
 
@@ -38,7 +38,7 @@ export default function App() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#0a0a1a',
+      background: '#111827',
       fontFamily: "'DM Sans', sans-serif",
       color: '#e2e8f0',
       display: 'flex',
@@ -49,7 +49,7 @@ export default function App() {
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #0a0a1a; }
+        ::-webkit-scrollbar-track { background: #111827; }
         ::-webkit-scrollbar-thumb { background: #c9a227; border-radius: 4px; }
         .game-card { transition: all 0.2s; }
         .game-card:hover { transform: translateY(-3px); }
@@ -127,7 +127,7 @@ export default function App() {
         }}>
           Casino Games
         </h1>
-        <p className="home-subtitle" style={{ fontSize: 14, color: '#64748b', lineHeight: 1.7 }}>
+        <p className="home-subtitle" style={{ fontSize: 14, color: '#8899bb', lineHeight: 1.7 }}>
           Apprends les jeux de casino — règles, stratégies et quiz interactifs.
           100% éducatif, aucun argent réel.
         </p>
@@ -137,7 +137,7 @@ export default function App() {
 
       {/* Games */}
       <div className="games-section">
-        <p style={{ fontSize: 11, color: '#64748b', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 4 }}>
+        <p style={{ fontSize: 11, color: '#8899bb', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 4 }}>
           Choisir un jeu
         </p>
 
@@ -150,8 +150,8 @@ export default function App() {
                 className={`game-card ${isAvailable ? 'game-card-available' : ''}`}
                 onClick={() => isAvailable && setCurrentGame(game.id)}
                 style={{
-                  background: '#0f0f23',
-                  border: `1px solid ${isAvailable ? '#1e1e3a' : '#1a1a2e'}`,
+                  background: '#1c2333',
+                  border: `1px solid ${isAvailable ? '#2d3a5a' : '#1c2333'}`,
                   borderRadius: 14,
                   padding: '20px 22px',
                   cursor: isAvailable ? 'pointer' : 'default',
@@ -165,7 +165,7 @@ export default function App() {
                   width: 54,
                   height: 54,
                   borderRadius: 12,
-                  background: isAvailable ? '#c9a22718' : '#1e1e3a',
+                  background: isAvailable ? '#c9a22718' : '#2d3a5a',
                   border: `1px solid ${isAvailable ? '#c9a22735' : '#2a2a4a'}`,
                   display: 'flex',
                   alignItems: 'center',
@@ -181,7 +181,7 @@ export default function App() {
                     <span style={{
                       fontWeight: 700,
                       fontSize: 16,
-                      color: isAvailable ? '#e2e8f0' : '#64748b',
+                      color: isAvailable ? '#e2e8f0' : '#8899bb',
                     }}>
                       {game.name}
                     </span>
@@ -195,15 +195,15 @@ export default function App() {
                       </span>
                     ) : (
                       <span style={{
-                        fontSize: 9, fontWeight: 700, color: '#64748b',
-                        background: '#1e1e3a', padding: '2px 7px',
+                        fontSize: 9, fontWeight: 700, color: '#8899bb',
+                        background: '#2d3a5a', padding: '2px 7px',
                         borderRadius: 20, textTransform: 'uppercase', letterSpacing: 1,
                       }}>
                         Bientôt
                       </span>
                     )}
                   </div>
-                  <p style={{ fontSize: 12, color: '#64748b', lineHeight: 1.5 }}>
+                  <p style={{ fontSize: 12, color: '#8899bb', lineHeight: 1.5 }}>
                     {game.description}
                   </p>
                 </div>
@@ -222,7 +222,7 @@ export default function App() {
         marginTop: 'auto',
         padding: '20px',
         textAlign: 'center',
-        borderTop: '1px solid #1e1e3a',
+        borderTop: '1px solid #2d3a5a',
         width: '100%',
       }}>
         <p style={{ fontSize: 11, color: '#334155' }}>

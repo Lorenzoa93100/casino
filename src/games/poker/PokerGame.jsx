@@ -93,12 +93,12 @@ function ShowdownResult({ result, onNextHand }) {
 
   if (result.forced) {
     return (
-      <div style={{ background:'#0f0f23', border:'1px solid #c9a22730', borderRadius:12, padding:16, textAlign:'center' }}>
+      <div style={{ background:'#1c2333', border:'1px solid #c9a22730', borderRadius:12, padding:16, textAlign:'center' }}>
         <div style={{ fontSize:22, marginBottom:6 }}>🏆</div>
         <div style={{ fontSize:14, color:'#c9a227', fontWeight:700, marginBottom:4 }}>
           {result.winnerName} remporte {result.pot} chips
         </div>
-        <div style={{ fontSize:12, color:'#64748b', marginBottom:14 }}>Tous les autres joueurs ont foldé.</div>
+        <div style={{ fontSize:12, color:'#8899bb', marginBottom:14 }}>Tous les autres joueurs ont foldé.</div>
         <button onClick={onNextHand} style={nextBtnStyle}>Main suivante →</button>
       </div>
     );
@@ -121,7 +121,7 @@ function ShowdownResult({ result, onNextHand }) {
   }
 
   return (
-    <div style={{ background:'#0f0f23', border:'1px solid #c9a22730', borderRadius:12, padding:16 }}>
+    <div style={{ background:'#1c2333', border:'1px solid #c9a22730', borderRadius:12, padding:16 }}>
       {/* Winner banner */}
       <div style={{ textAlign:'center', marginBottom:14 }}>
         <div style={{ fontSize:26, marginBottom:4 }}>🏆</div>
@@ -133,15 +133,15 @@ function ShowdownResult({ result, onNextHand }) {
       {/* Hands comparison table */}
       {evals.length > 0 && (
         <div style={{ marginBottom:14 }}>
-          <div style={{ fontSize:10, color:'#64748b', textTransform:'uppercase', letterSpacing:1, marginBottom:8 }}>
+          <div style={{ fontSize:10, color:'#8899bb', textTransform:'uppercase', letterSpacing:1, marginBottom:8 }}>
             Résultat des mains
           </div>
           {evals.map((e, i) => (
             <div key={e.playerId} style={{
               display:'flex', alignItems:'center', justifyContent:'space-between',
               padding:'7px 10px', borderRadius:8, marginBottom:4,
-              background: e.isWinner ? '#c9a22715' : '#0a0a1a',
-              border: `1px solid ${e.isWinner ? '#c9a22740' : '#1e1e3a'}`,
+              background: e.isWinner ? '#c9a22715' : '#111827',
+              border: `1px solid ${e.isWinner ? '#c9a22740' : '#2d3a5a'}`,
             }}>
               <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                 <span style={{ fontSize:14 }}>{e.isWinner ? '🥇' : i === 1 ? '🥈' : '🥉'}</span>
@@ -150,13 +150,13 @@ function ShowdownResult({ result, onNextHand }) {
                 </span>
               </div>
               <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                <span style={{ fontSize:12, color: e.isWinner ? '#e2e8f0' : '#64748b', fontWeight: e.isWinner ? 700 : 400 }}>
+                <span style={{ fontSize:12, color: e.isWinner ? '#e2e8f0' : '#8899bb', fontWeight: e.isWinner ? 700 : 400 }}>
                   {e.handName}
                 </span>
                 <span style={{
                   fontSize:10, fontWeight:700, padding:'2px 7px', borderRadius:10,
-                  background: e.isWinner ? '#c9a22730' : '#1e1e3a',
-                  color: e.isWinner ? '#c9a227' : '#64748b',
+                  background: e.isWinner ? '#c9a22730' : '#2d3a5a',
+                  color: e.isWinner ? '#c9a227' : '#8899bb',
                 }}>
                   #{displayRank(e.handRank)}/10
                 </span>
@@ -187,7 +187,7 @@ function ShowdownResult({ result, onNextHand }) {
 }
 
 const nextBtnStyle = {
-  background:'#c9a227', color:'#0a0a1a', border:'none',
+  background:'#c9a227', color:'#111827', border:'none',
   borderRadius:10, padding:'12px 28px',
   fontSize:14, fontWeight:700, cursor:'pointer',
   fontFamily:"'DM Sans', sans-serif",
@@ -201,7 +201,7 @@ const CARD_H = 62;
 function CardFace({ card }) {
   if (!card) return <CardSlot />;
   const isRed = card.s === '♥' || card.s === '♦';
-  const color = isRed ? '#dc2626' : '#1a1a2e';
+  const color = isRed ? '#dc2626' : '#1c2333';
   return (
     <div style={{
       width: CARD_W, height: CARD_H, background: '#f8f8f0',
@@ -241,7 +241,7 @@ function CardSlot() {
   return (
     <div style={{
       width: CARD_W, height: CARD_H, borderRadius: 6,
-      border: '2px dashed #2a2a4a', background: '#0f0f2380',
+      border: '2px dashed #2a2a4a', background: '#1c233380',
       flexShrink: 0,
     }} />
   );
@@ -299,7 +299,7 @@ function MenuScreen({ onStart }) {
         fontFamily: "'DM Serif Display', serif",
         fontSize: 26, color: '#c9a227', marginBottom: 6,
       }}>Texas Hold'em</h2>
-      <p style={{ color: '#64748b', fontSize: 13, marginBottom: 28, textAlign: 'center', maxWidth: 320 }}>
+      <p style={{ color: '#8899bb', fontSize: 13, marginBottom: 28, textAlign: 'center', maxWidth: 320 }}>
         Joueur contre 2 bots — Choisissez votre difficulté
       </p>
 
@@ -310,8 +310,8 @@ function MenuScreen({ onStart }) {
             onClick={() => setSelected(d.id)}
             style={{
               display: 'flex', alignItems: 'center', gap: 14,
-              background: selected === d.id ? d.bg : '#0f0f23',
-              border: `2px solid ${selected === d.id ? d.color : '#1e1e3a'}`,
+              background: selected === d.id ? d.bg : '#1c2333',
+              border: `2px solid ${selected === d.id ? d.color : '#2d3a5a'}`,
               borderRadius: 12, padding: '14px 18px',
               cursor: 'pointer', textAlign: 'left',
               transition: 'all 0.15s', width: '100%',
@@ -326,7 +326,7 @@ function MenuScreen({ onStart }) {
               }}>
                 {d.label}
               </div>
-              <div style={{ fontSize: 12, color: '#64748b', lineHeight: 1.4 }}>{d.desc}</div>
+              <div style={{ fontSize: 12, color: '#8899bb', lineHeight: 1.4 }}>{d.desc}</div>
             </div>
             {selected === d.id && (
               <div style={{
@@ -343,7 +343,7 @@ function MenuScreen({ onStart }) {
       <button
         onClick={() => onStart(selected)}
         style={{
-          background: '#c9a227', color: '#0a0a1a',
+          background: '#c9a227', color: '#111827',
           border: 'none', borderRadius: 12, padding: '14px 40px',
           fontSize: 15, fontWeight: 700, cursor: 'pointer',
           fontFamily: "'DM Sans', sans-serif",
@@ -365,8 +365,8 @@ function PlayerPanel({ player, isCurrentTurn, isDealer, isSB, isBB, showCards, i
     <div style={{
       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
       padding: '8px 12px',
-      background: isCurrentTurn ? '#c9a22715' : '#0f0f23',
-      border: `2px solid ${isCurrentTurn ? '#c9a227' : isWinner ? '#22c55e' : '#1e1e3a'}`,
+      background: isCurrentTurn ? '#c9a22715' : '#1c2333',
+      border: `2px solid ${isCurrentTurn ? '#c9a227' : isWinner ? '#22c55e' : '#2d3a5a'}`,
       borderRadius: 12, minWidth: 120, position: 'relative',
       transition: 'all 0.2s',
     }}>
@@ -415,7 +415,7 @@ function PlayerPanel({ player, isCurrentTurn, isDealer, isSB, isBB, showCards, i
             ? [0, 1].map(i => (
                 <div key={i} style={{
                   width: CARD_W, height: CARD_H, borderRadius: 6,
-                  background: '#0f0f23', border: '2px dashed #1e1e3a',
+                  background: '#1c2333', border: '2px dashed #2d3a5a',
                   opacity: 0.4, flexShrink: 0,
                 }} />
               ))
@@ -424,7 +424,7 @@ function PlayerPanel({ player, isCurrentTurn, isDealer, isSB, isBB, showCards, i
       </div>
 
       {/* Chips + bet */}
-      <div style={{ fontSize: 11, color: '#64748b' }}>
+      <div style={{ fontSize: 11, color: '#8899bb' }}>
         💰 {player.chips}
       </div>
       {player.roundBet > 0 && (
@@ -480,9 +480,9 @@ function ActionBar({ game, onAction, disabled }) {
       {/* Raise slider */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: 10,
-        background: '#0f0f23', borderRadius: 10, padding: '10px 14px',
+        background: '#1c2333', borderRadius: 10, padding: '10px 14px',
       }}>
-        <span style={{ fontSize: 12, color: '#64748b', whiteSpace: 'nowrap' }}>Relance:</span>
+        <span style={{ fontSize: 12, color: '#8899bb', whiteSpace: 'nowrap' }}>Relance:</span>
         <input
           type="range"
           min={minRaise}
@@ -500,12 +500,12 @@ function ActionBar({ game, onAction, disabled }) {
         <button
           onClick={() => setRaiseAmount(v => Math.max(minRaise, v - 20))}
           disabled={disabled}
-          style={{ ...btnStyle('#1e1e3a', '#e2e8f0'), flex: 'none', padding: '8px 10px', minWidth: 'auto', fontSize: 16 }}
+          style={{ ...btnStyle('#2d3a5a', '#e2e8f0'), flex: 'none', padding: '8px 10px', minWidth: 'auto', fontSize: 16 }}
         >−</button>
         <button
           onClick={() => setRaiseAmount(v => Math.min(maxRaise, v + 20))}
           disabled={disabled}
-          style={{ ...btnStyle('#1e1e3a', '#e2e8f0'), flex: 'none', padding: '8px 10px', minWidth: 'auto', fontSize: 16 }}
+          style={{ ...btnStyle('#2d3a5a', '#e2e8f0'), flex: 'none', padding: '8px 10px', minWidth: 'auto', fontSize: 16 }}
         >+</button>
       </div>
 
@@ -598,13 +598,13 @@ function GameScreen({ game, setGame, onBack, onNextHand }) {
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '10px 16px',
-        background: '#0f0f23', borderBottom: '1px solid #1e1e3a',
+        background: '#1c2333', borderBottom: '1px solid #2d3a5a',
       }}>
         <button
           onClick={onBack}
           style={{
-            background: 'none', border: '1px solid #1e1e3a', borderRadius: 8,
-            color: '#64748b', padding: '6px 12px', fontSize: 12, cursor: 'pointer',
+            background: 'none', border: '1px solid #2d3a5a', borderRadius: 8,
+            color: '#8899bb', padding: '6px 12px', fontSize: 12, cursor: 'pointer',
             fontFamily: "'DM Sans', sans-serif",
           }}
         >
@@ -622,7 +622,7 @@ function GameScreen({ game, setGame, onBack, onNextHand }) {
             Pot: <span style={{ color: '#c9a227' }}>{game.pot}</span>
           </span>
           {botThinking && (
-            <span style={{ fontSize: 11, color: '#64748b', fontStyle: 'italic' }}>
+            <span style={{ fontSize: 11, color: '#8899bb', fontStyle: 'italic' }}>
               🤔 réfléchit…
             </span>
           )}
@@ -632,7 +632,7 @@ function GameScreen({ game, setGame, onBack, onNextHand }) {
 
       {/* Table area */}
       <div style={{
-        flex: 1, background: '#0a0a1a', padding: '16px',
+        flex: 1, background: '#111827', padding: '16px',
         display: 'flex', flexDirection: 'column', gap: 12, alignItems: 'center',
       }}>
         {/* Bots row */}
@@ -708,17 +708,17 @@ function GameScreen({ game, setGame, onBack, onNextHand }) {
                 const hint = getHint(game, human.id);
                 return hint ? (
                   <div style={{
-                    background: '#0f0f23', border: `1px solid ${ACTION_COLORS[hint.action]}50`,
+                    background: '#1c2333', border: `1px solid ${ACTION_COLORS[hint.action]}50`,
                     borderRadius: 10, padding: '12px 14px', marginBottom: 10,
                     position: 'relative',
                   }}>
                     <button onClick={() => setShowHint(false)} style={{
                       position: 'absolute', top: 8, right: 10,
-                      background: 'none', border: 'none', color: '#64748b',
+                      background: 'none', border: 'none', color: '#8899bb',
                       cursor: 'pointer', fontSize: 14, lineHeight: 1,
                     }}>✕</button>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                      <span style={{ fontSize: 11, color: '#64748b', textTransform: 'uppercase', letterSpacing: 1 }}>💡 Conseil</span>
+                      <span style={{ fontSize: 11, color: '#8899bb', textTransform: 'uppercase', letterSpacing: 1 }}>💡 Conseil</span>
                       <span style={{
                         fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10,
                         background: ACTION_COLORS[hint.action] + '25',
@@ -735,7 +735,7 @@ function GameScreen({ game, setGame, onBack, onNextHand }) {
               {/* Hint button */}
               <button onClick={() => setShowHint(h => !h)} style={{
                 width: '100%', marginTop: 8,
-                background: showHint ? '#1e1e3a' : 'none',
+                background: showHint ? '#2d3a5a' : 'none',
                 border: '1px dashed #c9a22740', color: '#c9a22790',
                 borderRadius: 8, padding: '8px', fontSize: 12,
                 cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
@@ -746,8 +746,8 @@ function GameScreen({ game, setGame, onBack, onNextHand }) {
             </div>
           ) : (
             <div style={{
-              background: '#0f0f23', borderRadius: 10, padding: '14px',
-              textAlign: 'center', color: '#64748b', fontSize: 13,
+              background: '#1c2333', borderRadius: 10, padding: '14px',
+              textAlign: 'center', color: '#8899bb', fontSize: 13,
             }}>
               {botThinking ? '🤖 Le bot réfléchit…' : 'En attente…'}
             </div>
@@ -757,16 +757,16 @@ function GameScreen({ game, setGame, onBack, onNextHand }) {
         {/* Log */}
         <div style={{
           width: '100%', maxWidth: 480,
-          background: '#0f0f23', border: '1px solid #1e1e3a',
+          background: '#1c2333', border: '1px solid #2d3a5a',
           borderRadius: 10, padding: '10px 14px',
         }}>
-          <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>
+          <div style={{ fontSize: 10, color: '#8899bb', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>
             Journal
           </div>
           {(game.log || []).slice(-6).reverse().map((entry, i) => (
             <div key={i} style={{
-              fontSize: 12, color: i === 0 ? '#e2e8f0' : '#64748b',
-              padding: '2px 0', borderBottom: i < 5 ? '1px solid #1e1e3a10' : 'none',
+              fontSize: 12, color: i === 0 ? '#e2e8f0' : '#8899bb',
+              padding: '2px 0', borderBottom: i < 5 ? '1px solid #2d3a5a10' : 'none',
             }}>
               {entry}
             </div>
@@ -804,7 +804,7 @@ export default function PokerGame() {
     <div style={{
       fontFamily: "'DM Sans', sans-serif",
       color: '#e2e8f0',
-      background: '#0a0a1a',
+      background: '#111827',
       minHeight: 400,
     }}>
       {screen === 'menu' && <MenuScreen onStart={handleStart} />}

@@ -143,7 +143,7 @@ function Card({ label }) {
   return (
     <div style={{
       display: "inline-flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-      width: 42, height: 58, background: "#1a1a2e", border: `2px solid ${color}33`,
+      width: 42, height: 58, background: "#1c2333", border: `2px solid ${color}33`,
       borderRadius: 7, fontSize: 12, fontWeight: 700, color, fontFamily: "'DM Serif Display', serif",
       boxShadow: `0 2px 8px ${color}22`, flexShrink: 0,
     }}>
@@ -191,12 +191,12 @@ export default function PokerApp({ onBack }) {
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0a0a1a", fontFamily: "'DM Sans', sans-serif", color: "#e2e8f0" }}>
+    <div style={{ minHeight: "100vh", background: "#111827", fontFamily: "'DM Sans', sans-serif", color: "#e2e8f0" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #0a0a1a; }
+        ::-webkit-scrollbar-track { background: #111827; }
         ::-webkit-scrollbar-thumb { background: #c9a227; border-radius: 4px; }
         .hand-card { transition: all 0.2s; cursor: pointer; }
         .hand-card:hover { transform: translateY(-2px); border-color: #c9a22755 !important; }
@@ -219,8 +219,8 @@ export default function PokerApp({ onBack }) {
         }
         .poker-tabs-bar {
           display: flex;
-          background: #0f0f23;
-          border-bottom: 1px solid #1e1e3a;
+          background: #1c2333;
+          border-bottom: 1px solid #2d3a5a;
           padding: 0 4px;
         }
         .poker-content {
@@ -265,8 +265,8 @@ export default function PokerApp({ onBack }) {
             display: flex;
             flex-direction: column;
             width: 180px;
-            background: #0f0f23;
-            border-right: 1px solid #1e1e3a;
+            background: #1c2333;
+            border-right: 1px solid #2d3a5a;
             padding: 16px 8px;
             gap: 4px;
             flex-shrink: 0;
@@ -315,7 +315,7 @@ export default function PokerApp({ onBack }) {
         {/* Header */}
         <div style={{
           padding: "20px 24px 16px",
-          background: "linear-gradient(180deg, #0f0f23 0%, #0a0a1a 100%)",
+          background: "linear-gradient(180deg, #1c2333 0%, #111827 100%)",
           borderBottom: "1px solid #c9a22720",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -324,13 +324,13 @@ export default function PokerApp({ onBack }) {
               <h1 style={{ fontSize: 22, fontFamily: "'DM Serif Display', serif", color: "#c9a227", lineHeight: 1.2 }}>
                 Poker School
               </h1>
-              <p style={{ fontSize: 11, color: "#64748b", letterSpacing: 2, textTransform: "uppercase" }}>
+              <p style={{ fontSize: 11, color: "#8899bb", letterSpacing: 2, textTransform: "uppercase" }}>
                 Apprends à jouer
               </p>
             </div>
             {onBack && (
               <button onClick={onBack} style={{
-                background: "#1e1e3a", border: "1px solid #c9a22740", color: "#c9a227",
+                background: "#2d3a5a", border: "1px solid #c9a22740", color: "#c9a227",
                 borderRadius: 8, padding: "6px 14px", fontSize: 12, fontWeight: 600,
                 cursor: "pointer", fontFamily: "'DM Sans', sans-serif", letterSpacing: 1,
                 flexShrink: 0,
@@ -347,7 +347,7 @@ export default function PokerApp({ onBack }) {
             <button key={t.id} className="tab-btn" onClick={() => { setTab(t.id); setSelectedHand(null); }}
               style={{
                 flex: 1, padding: "10px 4px", background: "none", border: "none", cursor: "pointer",
-                color: tab === t.id ? "#c9a227" : "#64748b", fontSize: 10, fontWeight: 600,
+                color: tab === t.id ? "#c9a227" : "#8899bb", fontSize: 10, fontWeight: 600,
                 borderBottom: tab === t.id ? "2px solid #c9a227" : "2px solid transparent",
                 textTransform: "uppercase", letterSpacing: 1,
                 display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
@@ -368,7 +368,7 @@ export default function PokerApp({ onBack }) {
                   padding: "12px 16px", background: tab === t.id ? "#c9a22715" : "none",
                   border: "none", borderRadius: 8,
                   borderLeft: tab === t.id ? "3px solid #c9a227" : "3px solid transparent",
-                  cursor: "pointer", color: tab === t.id ? "#c9a227" : "#64748b",
+                  cursor: "pointer", color: tab === t.id ? "#c9a227" : "#8899bb",
                   fontSize: 13, fontWeight: 600, textAlign: "left",
                   display: "flex", alignItems: "center", gap: 10,
                   fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s",
@@ -385,14 +385,14 @@ export default function PokerApp({ onBack }) {
             {/* HANDS TAB */}
             {tab === "hands" && !selectedHand && (
               <div>
-                <p style={{ fontSize: 12, color: "#64748b", marginBottom: 16, textAlign: "center" }}>
+                <p style={{ fontSize: 12, color: "#8899bb", marginBottom: 16, textAlign: "center" }}>
                   Du plus fort au plus faible — clique pour les détails
                 </p>
                 <div className="hands-grid">
                   {HANDS.map((hand, i) => (
                     <div key={i} className="hand-card" onClick={() => setSelectedHand(hand)}
                       style={{
-                        background: "#0f0f23", border: "1px solid #1e1e3a", borderRadius: 10,
+                        background: "#1c2333", border: "1px solid #2d3a5a", borderRadius: 10,
                         padding: "12px 14px", display: "flex", alignItems: "center", gap: 12,
                       }}>
                       <div style={{
@@ -407,7 +407,7 @@ export default function PokerApp({ onBack }) {
                             #{hand.rank}
                           </span>
                         </div>
-                        <span style={{ fontSize: 11, color: "#64748b" }}>{hand.short}</span>
+                        <span style={{ fontSize: 11, color: "#8899bb" }}>{hand.short}</span>
                       </div>
                     </div>
                   ))}
@@ -427,7 +427,7 @@ export default function PokerApp({ onBack }) {
                   <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 26, color: "#c9a227" }}>
                     {selectedHand.name}
                   </h2>
-                  <span style={{ fontSize: 11, color: "#64748b", textTransform: "uppercase", letterSpacing: 2 }}>
+                  <span style={{ fontSize: 11, color: "#8899bb", textTransform: "uppercase", letterSpacing: 2 }}>
                     Rang #{selectedHand.rank}
                   </span>
                 </div>
@@ -437,11 +437,11 @@ export default function PokerApp({ onBack }) {
                 </div>
 
                 <div className="hand-detail-layout">
-                  <div style={{ background: "#0f0f23", borderRadius: 10, padding: 16 }}>
+                  <div style={{ background: "#1c2333", borderRadius: 10, padding: 16 }}>
                     <p style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{selectedHand.description}</p>
                   </div>
-                  <div style={{ background: "#0f0f23", borderRadius: 10, padding: 16 }}>
-                    <div style={{ fontSize: 10, color: "#64748b", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>Probabilité</div>
+                  <div style={{ background: "#1c2333", borderRadius: 10, padding: 16 }}>
+                    <div style={{ fontSize: 10, color: "#8899bb", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>Probabilité</div>
                     <div style={{ fontSize: 20, fontWeight: 700, color: "#c9a227", marginBottom: 12 }}>{selectedHand.probability}</div>
                     <div style={{ fontSize: 10, color: "#c9a227", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>💡 Conseil</div>
                     <p style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{selectedHand.tip}</p>
@@ -453,7 +453,7 @@ export default function PokerApp({ onBack }) {
             {/* POSITIONS TAB */}
             {tab === "positions" && (
               <div>
-                <p style={{ fontSize: 12, color: "#64748b", marginBottom: 12, textAlign: "center" }}>
+                <p style={{ fontSize: 12, color: "#8899bb", marginBottom: 12, textAlign: "center" }}>
                   La position est cruciale au poker
                 </p>
                 <div style={{
@@ -474,7 +474,7 @@ export default function PokerApp({ onBack }) {
                 <div className="positions-grid">
                   {POSITIONS.map((p, i) => (
                     <div key={i} style={{
-                      background: "#0f0f23", border: `1px solid ${p.color}33`, borderRadius: 10,
+                      background: "#1c2333", border: `1px solid ${p.color}33`, borderRadius: 10,
                       padding: "14px 16px",
                     }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
@@ -482,7 +482,7 @@ export default function PokerApp({ onBack }) {
                           background: p.color + "22", color: p.color, fontWeight: 800, fontSize: 13,
                           padding: "3px 10px", borderRadius: 20,
                         }}>{p.name}</div>
-                        <span style={{ fontSize: 11, color: "#64748b" }}>{p.full}</span>
+                        <span style={{ fontSize: 11, color: "#8899bb" }}>{p.full}</span>
                       </div>
                       <p style={{ fontSize: 12, color: "#cbd5e1", lineHeight: 1.5 }}>{p.desc}</p>
                     </div>
@@ -505,7 +505,7 @@ export default function PokerApp({ onBack }) {
                   value={glossSearch} onChange={e => setGlossSearch(e.target.value)}
                   placeholder="Rechercher un terme..."
                   style={{
-                    width: "100%", background: "#0f0f23", border: "1px solid #1e1e3a", borderRadius: 8,
+                    width: "100%", background: "#1c2333", border: "1px solid #2d3a5a", borderRadius: 8,
                     color: "#e2e8f0", padding: "10px 14px", fontSize: 13, marginBottom: 16, outline: "none",
                     fontFamily: "'DM Sans', sans-serif",
                   }}
@@ -513,7 +513,7 @@ export default function PokerApp({ onBack }) {
                 <div className="glossary-grid">
                   {filteredGloss.map((g, i) => (
                     <div key={i} style={{
-                      background: "#0f0f23", border: "1px solid #1e1e3a", borderRadius: 10,
+                      background: "#1c2333", border: "1px solid #2d3a5a", borderRadius: 10,
                       padding: "12px 14px",
                     }}>
                       <div style={{ fontWeight: 700, color: "#c9a227", fontSize: 14, marginBottom: 4 }}>{g.term}</div>
@@ -522,7 +522,7 @@ export default function PokerApp({ onBack }) {
                   ))}
                 </div>
                 {filteredGloss.length === 0 && (
-                  <p style={{ textAlign: "center", color: "#64748b", marginTop: 30 }}>Aucun résultat</p>
+                  <p style={{ textAlign: "center", color: "#8899bb", marginTop: 30 }}>Aucun résultat</p>
                 )}
               </div>
             )}
@@ -531,11 +531,11 @@ export default function PokerApp({ onBack }) {
             {tab === "quiz" && !quizDone && (
               <div className="quiz-container">
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-                  <span style={{ fontSize: 12, color: "#64748b" }}>Question {quizIdx + 1}/{QUIZ.length}</span>
+                  <span style={{ fontSize: 12, color: "#8899bb" }}>Question {quizIdx + 1}/{QUIZ.length}</span>
                   <span style={{ fontSize: 12, color: "#c9a227", fontWeight: 700 }}>Score: {quizScore}</span>
                 </div>
 
-                <div style={{ background: "#1e1e3a", borderRadius: 4, height: 4, marginBottom: 20 }}>
+                <div style={{ background: "#2d3a5a", borderRadius: 4, height: 4, marginBottom: 20 }}>
                   <div style={{
                     background: "#c9a227", height: 4, borderRadius: 4,
                     width: `${((quizIdx + (quizAnswer !== null ? 1 : 0)) / QUIZ.length) * 100}%`,
@@ -543,14 +543,14 @@ export default function PokerApp({ onBack }) {
                   }} />
                 </div>
 
-                <div style={{ background: "#0f0f23", borderRadius: 12, padding: 18, marginBottom: 16 }}>
+                <div style={{ background: "#1c2333", borderRadius: 12, padding: 18, marginBottom: 16 }}>
                   <p style={{ fontSize: 14, color: "#e2e8f0", lineHeight: 1.6 }}>{QUIZ[quizIdx].q}</p>
                 </div>
 
                 {QUIZ[quizIdx].options.map((opt, i) => {
                   const isCorrect = i === QUIZ[quizIdx].answer;
                   const isSelected = i === quizAnswer;
-                  let bg = "#0f0f23", border = "#1e1e3a", color = "#cbd5e1";
+                  let bg = "#1c2333", border = "#2d3a5a", color = "#cbd5e1";
                   if (quizAnswer !== null) {
                     if (isCorrect) { bg = "#14532d"; border = "#22c55e"; color = "#86efac"; }
                     else if (isSelected) { bg = "#450a0a"; border = "#ef4444"; color = "#fca5a5"; }
@@ -578,7 +578,7 @@ export default function PokerApp({ onBack }) {
 
                 {quizAnswer !== null && (
                   <button onClick={nextQuestion} style={{
-                    width: "100%", background: "#c9a227", color: "#0a0a1a", border: "none", borderRadius: 10,
+                    width: "100%", background: "#c9a227", color: "#111827", border: "none", borderRadius: 10,
                     padding: "13px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
                   }}>
                     {quizIdx + 1 >= QUIZ.length ? "Voir les résultats" : "Question suivante →"}
@@ -601,7 +601,7 @@ export default function PokerApp({ onBack }) {
                    "Reprends les sections et réessaie !"}
                 </p>
                 <button onClick={resetQuiz} style={{
-                  background: "#c9a227", color: "#0a0a1a", border: "none", borderRadius: 10,
+                  background: "#c9a227", color: "#111827", border: "none", borderRadius: 10,
                   padding: "13px 32px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
                 }}>
                   Recommencer
