@@ -547,7 +547,7 @@ export default function BlackjackApp({ onBack }) {
           padding: 24px 12px;
           position: sticky; top: 57px; height: calc(100vh - 57px); overflow-y: auto;
         }
-        .bj-content { flex: 1; padding: 24px 20px; max-width: 700px; display: flex; flex-direction: column; align-items: center; }
+        .bj-content { flex: 1; overflow-y: auto; }
         .bj-tabbar {
           display: flex;
           border-top: 1px solid #2d3a5a;
@@ -573,7 +573,7 @@ export default function BlackjackApp({ onBack }) {
         @media (min-width: 768px) {
           .bj-sidebar { display: block; }
           .bj-tabbar { display: none; }
-          .bj-content { padding: 32px 40px; }
+          .bj-inner { padding: 32px 40px !important; }
         }
       `}</style>
 
@@ -615,8 +615,12 @@ export default function BlackjackApp({ onBack }) {
           </nav>
 
           {/* Content */}
-          <main className="bj-content" style={{ width: '100%' }}>
-            <div style={{ width: '100%' }}>
+          <main className="bj-content">
+            <div className="bj-inner" style={{
+              width: '100%', maxWidth: 700,
+              margin: '0 auto',
+              padding: '24px 20px',
+            }}>
               {tab === 'rules'    && <RulesTab />}
               {tab === 'strategy' && <StrategyTab />}
               {tab === 'glossary' && <GlossaryTab />}
