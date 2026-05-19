@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import BlackjackGame from './BlackjackGame.jsx'
+import './blackjack.css'
 
 // ─── Data ───────────────────────────────────────────────────────────────────
 
@@ -518,65 +519,7 @@ export default function BlackjackApp({ onBack }) {
   const [tab, setTab] = useState('rules')
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: '#111827',
-      fontFamily: "'DM Sans', sans-serif",
-      color: '#e2e8f0',
-    }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap');
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #111827; }
-        ::-webkit-scrollbar-thumb { background: #c9a227; border-radius: 4px; }
-
-        .bj-layout { display: flex; flex-direction: column; min-height: 100vh; }
-        .bj-header {
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 16px 20px;
-          border-bottom: 1px solid #2d3a5a;
-          background: #111827;
-          position: sticky; top: 0; z-index: 10;
-        }
-        .bj-body { display: flex; flex: 1; }
-        .bj-sidebar {
-          display: none;
-          width: 180px; flex-shrink: 0;
-          border-right: 1px solid #2d3a5a;
-          padding: 24px 12px;
-          position: sticky; top: 57px; height: calc(100vh - 57px); overflow-y: auto;
-        }
-        .bj-content { flex: 1; overflow-y: auto; }
-        .bj-tabbar {
-          display: flex;
-          border-top: 1px solid #2d3a5a;
-          background: #111827;
-          position: sticky; bottom: 0; z-index: 10;
-        }
-        .bj-tab-btn {
-          flex: 1; padding: 10px 4px; border: none; background: none;
-          color: #8899bb; cursor: pointer; font-size: 10px; font-family: inherit;
-          display: flex; flex-direction: column; align-items: center; gap: 3;
-          transition: color 0.15s;
-        }
-        .bj-tab-btn.active { color: #c9a227; }
-        .bj-tab-btn .icon { font-size: 18px; }
-        .bj-sidebar-btn {
-          display: flex; align-items: center; gap: 10;
-          width: 100%; padding: 10px 12px; border-radius: 8px; border: none;
-          background: none; color: #8899bb; cursor: pointer; font-size: 13px;
-          font-family: inherit; text-align: left; transition: all 0.15s; margin-bottom: 4px;
-        }
-        .bj-sidebar-btn.active { background: #c9a22718; color: #c9a227; }
-
-        @media (min-width: 768px) {
-          .bj-sidebar { display: block; }
-          .bj-tabbar { display: none; }
-          .bj-inner { padding: 32px 40px !important; }
-        }
-      `}</style>
-
+    <div>
       <div className="bj-layout">
         {/* Header */}
         <header className="bj-header">

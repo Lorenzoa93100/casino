@@ -1,73 +1,9 @@
 import { useState } from 'react'
 import RouletteWheel from './RouletteWheel.jsx'
 import { spinWheel, evaluateBets, explainResult, getColor } from './engine.js'
+import './roulette.css'
 
-const GAME_CSS = `
-@keyframes rlSlideUp {
-  from { opacity:0; transform: translateY(16px); }
-  to   { opacity:1; transform: translateY(0); }
-}
-.rl-result-box { animation: rlSlideUp 0.4s ease; }
-.rl-game-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-}
-.rl-game-cols {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  width: 100%;
-}
-@media (min-width: 860px) {
-  .rl-game-cols {
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 24px;
-  }
-  .rl-wheel-col {
-    flex-shrink: 0;
-  }
-  .rl-table-col {
-    flex: 1;
-    max-width: 420px;
-  }
-}
-.rl-chip-btn {
-  width:48px; height:48px; border-radius:50%; border:3px solid transparent;
-  font-weight:700; font-size:13px; cursor:pointer;
-  transition: transform 0.1s, box-shadow 0.1s;
-  box-shadow: 0 4px 0 rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3);
-}
-.rl-chip-btn:hover  { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3); }
-.rl-chip-btn:active { transform: translateY(1px);  box-shadow: 0 2px 0 rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3); }
-.rl-num-cell {
-  width:32px; height:32px; display:flex; align-items:center; justify-content:center;
-  font-size:11px; font-weight:700; cursor:pointer; border-radius:3px;
-  transition: opacity 0.15s, transform 0.1s;
-  user-select: none;
-}
-.rl-num-cell:hover { opacity:0.8; transform:scale(1.1); }
-.rl-outside-btn {
-  padding:6px 10px; border-radius:4px; cursor:pointer; font-size:12px; font-weight:600;
-  transition: opacity 0.15s, transform 0.1s; user-select:none;
-}
-.rl-outside-btn:hover { opacity:0.8; transform:scale(1.04); }
-.rl-spin-btn {
-  padding:14px 40px; border-radius:8px; border:none; cursor:pointer;
-  font-size:16px; font-weight:700; letter-spacing:0.5px;
-  background: linear-gradient(135deg, #c9a227 0%, #a07c10 100%);
-  color:#000; box-shadow: 0 4px 12px rgba(201,162,39,0.4);
-  transition: transform 0.1s, box-shadow 0.1s;
-}
-.rl-spin-btn:hover:not(:disabled)  { transform:translateY(-2px); box-shadow:0 6px 16px rgba(201,162,39,0.5); }
-.rl-spin-btn:active:not(:disabled) { transform:translateY(1px); }
-.rl-spin-btn:disabled { opacity:0.5; cursor:not-allowed; }
-`
+
 
 const CHIPS = [
   { value: 1,   color: '#e5e7eb', border: '#9ca3af', textColor: '#111' },

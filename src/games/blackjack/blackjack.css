@@ -1,0 +1,150 @@
+/* ─── Layout principal ──────────────────────────────────────────────────────── */
+.bj-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header sticky en haut */
+.bj-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: #111827;
+  border-bottom: 1px solid #334155;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Zone body = sidebar + content */
+.bj-body {
+  display: flex;
+  flex: 1;
+}
+
+/* ─── Sidebar (desktop uniquement) ─────────────────────────────────────────── */
+.bj-sidebar {
+  display: none; /* masquée sur mobile */
+  width: 180px;
+  flex-shrink: 0;
+  border-right: 1px solid #334155;
+  padding: 24px 12px;
+  position: sticky;
+  top: 57px;
+  height: calc(100vh - 57px);
+  overflow-y: auto;
+}
+
+.bj-sidebar-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  background: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  text-align: left;
+  transition: all 0.15s;
+  margin-bottom: 4px;
+}
+.bj-sidebar-btn.active {
+  background: #c9a22718;
+  color: #c9a227;
+}
+
+/* ─── Contenu principal ─────────────────────────────────────────────────────── */
+.bj-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Inner centré avec max-width */
+.bj-inner {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+/* ─── Tab bar mobile (sticky en BAS) ────────────────────────────────────────── */
+.bj-tabbar {
+  display: flex;
+  border-top: 1px solid #334155;
+  background: #111827;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+/* Bouton tab : icône + label empilés */
+.bj-tab-btn {
+  flex: 1;
+  padding: 10px 4px;
+  border: none;
+  background: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 10px;
+  font-family: inherit;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transition: color 0.15s;
+}
+.bj-tab-btn .icon { font-size: 18px; }
+.bj-tab-btn.active { color: #c9a227; }
+
+/* ─── Cards de section ──────────────────────────────────────────────────────── */
+/* Card de base pour chaque bloc de règles, glossaire, etc. */
+.bj-card {
+  background: #1e2740;
+  border-radius: 12px;
+  padding: 16px 18px;
+  border: 1px solid #334155;
+}
+
+/* ─── Animations cartes ─────────────────────────────────────────────────────── */
+@keyframes bjDeal {
+  from { opacity: 0; transform: translate(60px, -40px) rotate(15deg); }
+  to   { opacity: 1; transform: translate(0, 0) rotate(0deg); }
+}
+@keyframes bjFlip {
+  0%   { transform: scaleX(1); }
+  50%  { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+@keyframes bjPulse {
+  0%, 100% { box-shadow: 0 0 0 2px #c9a22760; }
+  50%       { box-shadow: 0 0 0 6px #c9a22730; }
+}
+@keyframes bjSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.bj-deal { animation: bjDeal 0.35s ease-out both; }
+.bj-flip { animation: bjFlip 0.4s ease-in-out both; }
+
+/* Carte hover */
+.hand-card { transition: all 0.2s; cursor: pointer; }
+.hand-card:hover { transform: translateY(-2px); border-color: #c9a22755 !important; }
+
+/* Bouton quiz */
+.ans-btn { transition: all 0.15s; }
+.ans-btn:hover:not(:disabled) { transform: scale(1.01); }
+
+/* ─── Responsive desktop ────────────────────────────────────────────────────── */
+@media (min-width: 768px) {
+  .bj-sidebar { display: block; }
+  .bj-tabbar  { display: none; }   /* sidebar remplace la tabbar sur desktop */
+  .bj-inner   { padding: 32px 40px; }
+}

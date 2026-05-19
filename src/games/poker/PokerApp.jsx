@@ -1,5 +1,6 @@
 import { useState } from "react";
 import PokerGame from "./PokerGame.jsx";
+import './poker.css'
 
 const SUIT_COLORS = { "♠": "#e2e8f0", "♥": "#f87171", "♦": "#f87171", "♣": "#e2e8f0" };
 
@@ -192,119 +193,7 @@ export default function PokerApp({ onBack }) {
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#111827", fontFamily: "'DM Sans', sans-serif", color: "#e2e8f0" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap');
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #111827; }
-        ::-webkit-scrollbar-thumb { background: #c9a227; border-radius: 4px; }
-        .hand-card { transition: all 0.2s; cursor: pointer; }
-        .hand-card:hover { transform: translateY(-2px); border-color: #c9a22755 !important; }
-        .tab-btn { transition: all 0.2s; }
-        .ans-btn { transition: all 0.15s; }
-        .ans-btn:hover:not(:disabled) { transform: scale(1.01); }
-
-        .poker-layout {
-          display: flex;
-          flex-direction: column;
-          min-height: 100vh;
-        }
-        .poker-body {
-          display: flex;
-          flex: 1;
-          overflow: hidden;
-        }
-        .poker-tabs-sidebar {
-          display: none;
-        }
-        .poker-tabs-bar {
-          display: flex;
-          background: #111827;
-          border-top: 1px solid #2d3a5a;
-          position: sticky; bottom: 0; z-index: 10;
-        }
-        .poker-content {
-          flex: 1;
-          overflow: auto;
-        }
-        .poker-inner { padding: 16px; }
-        .hands-grid {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-        .hand-detail-layout {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-        .positions-grid {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-        .glossary-grid {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-        .quiz-container {
-          max-width: 100%;
-        }
-
-        @media (min-width: 768px) {
-          .poker-tabs-bar { display: none; }
-          .poker-tabs-sidebar {
-            display: flex;
-            flex-direction: column;
-            width: 200px;
-            background: #1c2333;
-            border-right: 1px solid #2d3a5a;
-            padding: 16px 8px;
-            gap: 4px;
-            flex-shrink: 0;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow-y: auto;
-          }
-          .poker-inner { padding: 24px 28px; }
-          .hands-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-          }
-          .hand-detail-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            align-items: start;
-          }
-          .hand-detail-full {
-            grid-column: 1 / -1;
-          }
-          .positions-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-          }
-          .glossary-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-          }
-          .quiz-container {
-            max-width: 600px;
-            margin: 0 auto;
-          }
-        }
-
-        @media (min-width: 1100px) {
-          .hands-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-      `}</style>
-
+    <div>
       <div className="poker-layout">
         {/* Header */}
         <div style={{
@@ -710,5 +599,5 @@ export default function PokerApp({ onBack }) {
         ))}
       </nav>
     </div>
-  );
+  )
 }

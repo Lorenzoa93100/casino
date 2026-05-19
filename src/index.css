@@ -1,3 +1,6 @@
+/* Google Fonts — chargé une seule fois ici */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap');
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -10,7 +13,12 @@ html, body, #root {
 
 body {
   background: #111827;
-  color: #e2e8f0;
+  color: #f1f5f9;
   font-family: 'DM Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+
+/* Scrollbar globale */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #111827; }
+::-webkit-scrollbar-thumb { background: #c9a227; border-radius: 4px; }

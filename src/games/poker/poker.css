@@ -1,0 +1,155 @@
+/* ─── Layout principal ──────────────────────────────────────────────────────── */
+.poker-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Zone body = sidebar + content */
+.poker-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ─── Sidebar (desktop uniquement) ─────────────────────────────────────────── */
+.poker-tabs-sidebar {
+  display: none; /* masquée sur mobile */
+}
+
+/* ─── Contenu principal ─────────────────────────────────────────────────────── */
+.poker-content {
+  flex: 1;
+  overflow: auto;
+}
+
+.poker-inner {
+  padding: 16px;
+}
+
+/* ─── Tab bar mobile (sticky en BAS) ────────────────────────────────────────── */
+.poker-tabs-bar {
+  display: flex;
+  background: #111827;
+  border-top: 1px solid #334155;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+/* Bouton tab — icône + label empilés, même style que Blackjack */
+.tab-btn {
+  transition: all 0.2s;
+}
+
+/* ─── Cards de section ──────────────────────────────────────────────────────── */
+/* Card réutilisable pour règles, positions, glossaire */
+.poker-card {
+  background: #1e2740;
+  border-radius: 12px;
+  padding: 16px 18px;
+  border: 1px solid #334155;
+}
+
+/* ─── Grilles responsive ────────────────────────────────────────────────────── */
+/* Grille des mains (1 col mobile → 2 → 3) */
+.hands-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Layout détail d'une main */
+.hand-detail-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Grille positions et glossaire */
+.positions-grid,
+.glossary-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Conteneur quiz */
+.quiz-container {
+  max-width: 100%;
+}
+
+/* ─── Animations cartes poker ───────────────────────────────────────────────── */
+@keyframes pkDeal {
+  from { opacity: 0; transform: translate(40px, -30px) rotate(10deg); }
+  to   { opacity: 1; transform: translate(0, 0) rotate(0deg); }
+}
+@keyframes pkFlip {
+  0%   { transform: scaleX(1); }
+  50%  { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+.pk-deal { animation: pkDeal 0.35s ease-out both; }
+.pk-flip { animation: pkFlip 0.4s ease-in-out both; }
+
+/* Hover sur les cartes de main */
+.hand-card { transition: all 0.2s; cursor: pointer; }
+.hand-card:hover { transform: translateY(-2px); border-color: #c9a22755 !important; }
+
+/* Boutons quiz */
+.ans-btn { transition: all 0.15s; }
+.ans-btn:hover:not(:disabled) { transform: scale(1.01); }
+
+/* ─── Responsive desktop ────────────────────────────────────────────────────── */
+@media (min-width: 768px) {
+  .poker-tabs-bar { display: none; } /* sidebar remplace la tabbar */
+
+  .poker-tabs-sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    background: #1e2740;
+    border-right: 1px solid #334155;
+    padding: 16px 8px;
+    gap: 4px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .poker-inner { padding: 24px 28px; }
+
+  .hands-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .hand-detail-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .hand-detail-full { grid-column: 1 / -1; }
+
+  .positions-grid,
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .quiz-container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 1100px) {
+  .hands-grid { grid-template-columns: repeat(3, 1fr); }
+}

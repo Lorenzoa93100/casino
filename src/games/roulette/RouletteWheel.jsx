@@ -61,44 +61,40 @@ export default function RouletteWheel({ spinning, result, onSpinEnd }) {
   const [ballSpinning, setBallSpinning] = useState(false)
   const [ballSettled, setBallSettled] = useState(false)
   const [ballAngle, setBallAngle] = useState(0)
+  // Toujours garder la dernière version de onSpinEnd pour éviter les closures périmées
+  const onSpinEndRef = useRef(onSpinEnd)
+  useEffect(() => { onSpinEndRef.current = onSpinEnd })
 
   useEffect(() => {
     if (!spinning || result === null) return
 
-    // Find wheel index of result
     const idx = WHEEL_SEQUENCE.indexOf(result)
     const step = 360 / SEG_COUNT
-    // Segment center angle from top (0°) going clockwise
     const segAngle = idx * step + step / 2
 
-    // We want segAngle to end at top (0°) after spin
-    // Full rotations (5 complete spins) + offset to land result at top
+    // 5 tours complets + décalage pour amener le résultat sous l'indicateur
     const extra = (360 - segAngle + 360) % 360
     const target = angleRef.current + 5 * 360 + extra
     angleRef.current = target
     setAngle(target)
     setBallSpinning(true)
     setBallSettled(false)
-  }, [spinning, result])
 
-  function handleTransitionEnd(e) {
-    if (e.propertyName !== 'transform') return
-    setBallSpinning(false)
-    setBallSettled(true)
-    // position ball in the result segment
-    const idx = WHEEL_SEQUENCE.indexOf(result)
-    const step = 360 / SEG_COUNT
-    setBallAngle(idx * step + step / 2)
-    onSpinEnd?.()
-  }
+    // setTimeout au lieu de onTransitionEnd — plus fiable sur SVG et mobile
+    const timer = setTimeout(() => {
+      setBallSpinning(false)
+      setBallSettled(true)
+      setBallAngle(idx * step + step / 2)
+      onSpinEndRef.current?.()
+    }, 5800) // 5.5s animation + 300ms marge
+
+    return () => clearTimeout(timer)
+  }, [spinning, result])
 
   return (
     <div style={{ position: 'relative', display: 'inline-block', userSelect: 'none' }}>
       <style>{ANIM_CSS}</style>
-
-      {/* Gold rim */}
       <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} style={{ display: 'block' }}>
-        {/* Outer gold ring */}
         <circle cx={CX} cy={CY} r={R_OUTER + 6} fill="#8B6914" />
         <circle cx={CX} cy={CY} r={R_OUTER + 3} fill="#c9a227" />
 
@@ -109,7 +105,6 @@ export default function RouletteWheel({ spinning, result, onSpinEnd }) {
             transform: `rotate(${angle}deg)`,
             transition: spinning ? 'transform 5.5s cubic-bezier(0.17,0.67,0.08,1)' : 'none',
           }}
-          onTransitionEnd={handleTransitionEnd}
         >
           {SEGMENTS.map(({ num, color, path, tx, ty, rot }, i) => (
             <g key={i}>

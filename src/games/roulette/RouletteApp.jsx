@@ -1,75 +1,8 @@
 import { useState } from 'react'
 import RouletteGame from './RouletteGame.jsx'
+import './roulette.css'
 
-const RL_CSS = `
-.rl-layout { display:flex; flex-direction:column; min-height:100vh; background:#111827; }
-.rl-header {
-  display:flex; align-items:center; gap:16px; padding:0 20px; height:57px;
-  background:#111827; border-bottom:1px solid #2d3a5a;
-  position:sticky; top:0; z-index:10;
-}
-.rl-body { display:flex; flex:1; }
-.rl-sidebar {
-  display:none; width:180px; flex-shrink:0;
-  border-right:1px solid #2d3a5a; padding:24px 12px;
-  position:sticky; top:57px; height:calc(100vh - 57px); overflow-y:auto;
-}
-.rl-tabbar {
-  display:flex;
-  background:#111827; border-top:1px solid #2d3a5a;
-  position:sticky; bottom:0; z-index:10;
-}
-.rl-content { flex:1; overflow-y:auto; }
-.rl-inner { width:100%; padding:24px 20px; }
-.rl-tab-btn {
-  flex:1; padding:10px 4px; border:none;
-  background:none; color:#8899bb; cursor:pointer; font-size:10px; font-weight:600;
-  display:flex; flex-direction:column; align-items:center; gap:3;
-  transition:color 0.15s; font-family:inherit;
-}
-.rl-tab-btn .rl-tab-icon { font-size:18px; }
-.rl-tab-btn:hover { color:#e2e8f0; }
-.rl-tab-btn.active { color:#c9a227; }
-.rl-sidebar-btn {
-  display:flex; align-items:center; gap:10px;
-  width:100%; padding:10px 12px; border-radius:8px; border:none;
-  background:none; color:#8899bb; cursor:pointer; font-size:13px;
-  font-family:inherit; text-align:left; transition:all 0.15s; margin-bottom:4px;
-}
-.rl-sidebar-btn.active { background:#c9a22718; color:#c9a227; }
-.rl-section { display:flex; flex-direction:column; gap:12px; }
-.rl-section-title { font-size:20px; font-weight:700; color:#c9a227; margin-bottom:4px; font-family:'DM Serif Display',serif; }
-.rl-card {
-  background:#1c2333; border-radius:12px; padding:16px 18px;
-  border:1px solid #2d3a5a;
-}
-.rl-card h3 { font-size:15px; font-weight:700; color:#e2e8f0; margin:0 0 8px; }
-.rl-card p, .rl-card li { font-size:13px; color:#c8d6f0; line-height:1.7; }
-.rl-card ul, .rl-card ol { padding-left:18px; margin:4px 0; }
-.rl-quiz-btn {
-  padding:12px 16px; border-radius:10px; border:1px solid #2d3a5a;
-  background:#1c2333; color:#e2e8f0; cursor:pointer; font-size:13px;
-  text-align:left; width:100%; transition:all 0.15s; font-family:inherit; line-height:1.5;
-}
-.rl-quiz-btn:hover { border-color:#c9a227; }
-.rl-quiz-btn.correct { background:#14532d; border-color:#22c55e; color:#22c55e; }
-.rl-quiz-btn.wrong   { background:#450a0a; border-color:#ef4444; color:#ef4444; }
-.rl-bet-card {
-  background:#1c2333; border:1px solid #2d3a5a; border-radius:12px;
-  padding:16px 18px;
-}
-.rl-bet-card h4 { margin:0 0 6px; font-size:14px; font-weight:700; color:#c9a227; }
-.rl-bet-card p { margin:0; font-size:13px; color:#c8d6f0; line-height:1.7; }
-.rl-payout-badge {
-  display:inline-block; padding:2px 8px; border-radius:20px;
-  background:#0f2d1e; color:#4ade80; font-size:11px; font-weight:700; margin-left:8px;
-}
-@media (min-width:768px) {
-  .rl-sidebar  { display:block; }
-  .rl-tabbar   { display:none; }
-  .rl-inner    { padding:32px 40px; }
-}
-`
+
 
 const TABS = [
   { id: 'rules',    label: 'Règles',    icon: '📋' },
@@ -282,8 +215,6 @@ export default function RouletteApp({ onBack }) {
 
   return (
     <div className="rl-layout">
-      <style>{RL_CSS}</style>
-
       {/* Header */}
       <header className="rl-header">
         <button onClick={onBack} style={{
