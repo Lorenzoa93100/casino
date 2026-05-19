@@ -220,9 +220,9 @@ export default function PokerApp({ onBack }) {
         }
         .poker-tabs-bar {
           display: flex;
-          background: #1c2333;
-          border-bottom: 1px solid #2d3a5a;
-          padding: 0 4px;
+          background: #111827;
+          border-top: 1px solid #2d3a5a;
+          position: sticky; bottom: 0; z-index: 10;
         }
         .poker-content {
           flex: 1;
@@ -254,9 +254,7 @@ export default function PokerApp({ onBack }) {
         }
 
         @media (min-width: 768px) {
-          .poker-tabs-bar {
-            display: none;
-          }
+          .poker-tabs-bar { display: none; }
           .poker-tabs-sidebar {
             display: flex;
             flex-direction: column;
@@ -336,24 +334,6 @@ export default function PokerApp({ onBack }) {
               </button>
             )}
           </div>
-        </div>
-
-        {/* Mobile tabs bar */}
-        <div className="poker-tabs-bar">
-          {tabs.map(t => (
-            <button key={t.id} className="tab-btn" onClick={() => { setTab(t.id); setSelectedHand(null); }}
-              style={{
-                flex: 1, padding: "10px 4px", background: "none", border: "none", cursor: "pointer",
-                color: tab === t.id ? "#c9a227" : "#8899bb", fontSize: 10, fontWeight: 600,
-                borderBottom: tab === t.id ? "2px solid #c9a227" : "2px solid transparent",
-                textTransform: "uppercase", letterSpacing: 1,
-                display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
-                fontFamily: "'DM Sans', sans-serif",
-              }}>
-              <span style={{ fontSize: 16 }}>{t.icon}</span>
-              {t.label}
-            </button>
-          ))}
         </div>
 
         <div className="poker-body">
@@ -713,6 +693,22 @@ export default function PokerApp({ onBack }) {
           </div> {/* fin poker-content */}
         </div>
       </div>
+
+      {/* Mobile tab bar — sticky bottom */}
+      <nav className="poker-tabs-bar">
+        {tabs.map(t => (
+          <button key={t.id} className="tab-btn" onClick={() => { setTab(t.id); setSelectedHand(null); }}
+            style={{
+              flex: 1, padding: "10px 4px", background: "none", border: "none", cursor: "pointer",
+              color: tab === t.id ? "#c9a227" : "#8899bb", fontSize: 10, fontWeight: 600,
+              display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
+              fontFamily: "'DM Sans', sans-serif",
+            }}>
+            <span style={{ fontSize: 18 }}>{t.icon}</span>
+            {t.label}
+          </button>
+        ))}
+      </nav>
     </div>
   );
 }

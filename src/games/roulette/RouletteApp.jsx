@@ -15,49 +15,59 @@ const RL_CSS = `
   position:sticky; top:57px; height:calc(100vh - 57px); overflow-y:auto;
 }
 .rl-tabbar {
-  display:flex; gap:4px; padding:12px 16px; overflow-x:auto;
-  border-bottom:1px solid #2d3a5a; background:#111827;
-  position:sticky; top:57px; z-index:9;
+  display:flex;
+  background:#111827; border-top:1px solid #2d3a5a;
+  position:sticky; bottom:0; z-index:10;
 }
-.rl-tabbar::-webkit-scrollbar { height:3px; }
-.rl-tabbar::-webkit-scrollbar-thumb { background:#2d3a5a; border-radius:3px; }
 .rl-content { flex:1; overflow-y:auto; }
 .rl-inner { width:100%; padding:24px 20px; }
 .rl-tab-btn {
-  padding:8px 14px; border-radius:6px; border:1px solid transparent;
-  background:transparent; color:#8899bb; cursor:pointer; font-size:14px;
-  white-space:nowrap; transition:all 0.15s; font-family:inherit;
+  flex:1; padding:10px 4px; border:none;
+  background:none; color:#8899bb; cursor:pointer; font-size:10px; font-weight:600;
+  display:flex; flex-direction:column; align-items:center; gap:3;
+  transition:color 0.15s; font-family:inherit;
 }
-.rl-tab-btn:hover { color:#e2e8f0; background:#1c2333; }
-.rl-tab-btn.active { background:#1c2333; border-color:#2d3a5a; color:#c9a227; font-weight:600; }
-.rl-sidebar .rl-tab-btn { display:block; width:100%; text-align:left; margin-bottom:4px; }
-.rl-section { margin-bottom:32px; }
-.rl-section h2 { font-size:20px; font-weight:700; color:#e2e8f0; margin:0 0 12px; }
-.rl-section h3 { font-size:15px; font-weight:600; color:#c9a227; margin:16px 0 6px; }
-.rl-section p, .rl-section li { font-size:14px; color:#8899bb; line-height:1.7; }
-.rl-section ul { padding-left:18px; margin:6px 0; }
+.rl-tab-btn .rl-tab-icon { font-size:18px; }
+.rl-tab-btn:hover { color:#e2e8f0; }
+.rl-tab-btn.active { color:#c9a227; }
+.rl-sidebar-btn {
+  display:flex; align-items:center; gap:10px;
+  width:100%; padding:10px 12px; border-radius:8px; border:none;
+  background:none; color:#8899bb; cursor:pointer; font-size:13px;
+  font-family:inherit; text-align:left; transition:all 0.15s; margin-bottom:4px;
+}
+.rl-sidebar-btn.active { background:#c9a22718; color:#c9a227; }
+.rl-section { display:flex; flex-direction:column; gap:12px; }
+.rl-section-title { font-size:20px; font-weight:700; color:#c9a227; margin-bottom:4px; font-family:'DM Serif Display',serif; }
+.rl-card {
+  background:#1c2333; border-radius:12px; padding:16px 18px;
+  border:1px solid #2d3a5a;
+}
+.rl-card h3 { font-size:15px; font-weight:700; color:#e2e8f0; margin:0 0 8px; }
+.rl-card p, .rl-card li { font-size:13px; color:#c8d6f0; line-height:1.7; }
+.rl-card ul, .rl-card ol { padding-left:18px; margin:4px 0; }
 .rl-quiz-btn {
-  padding:10px 16px; border-radius:6px; border:1px solid #2d3a5a;
-  background:#1c2333; color:#e2e8f0; cursor:pointer; font-size:14px;
-  text-align:left; width:100%; margin-bottom:6px; transition:all 0.15s; font-family:inherit;
+  padding:12px 16px; border-radius:10px; border:1px solid #2d3a5a;
+  background:#1c2333; color:#e2e8f0; cursor:pointer; font-size:13px;
+  text-align:left; width:100%; transition:all 0.15s; font-family:inherit; line-height:1.5;
 }
-.rl-quiz-btn:hover { border-color:#c9a227; color:#c9a227; }
-.rl-quiz-btn.correct { background:#14532d; border-color:#16a34a; color:#4ade80; }
-.rl-quiz-btn.wrong   { background:#450a0a; border-color:#dc2626; color:#f87171; }
+.rl-quiz-btn:hover { border-color:#c9a227; }
+.rl-quiz-btn.correct { background:#14532d; border-color:#22c55e; color:#22c55e; }
+.rl-quiz-btn.wrong   { background:#450a0a; border-color:#ef4444; color:#ef4444; }
 .rl-bet-card {
-  background:#1c2333; border:1px solid #2d3a5a; border-radius:10px;
-  padding:14px 16px; margin-bottom:10px;
+  background:#1c2333; border:1px solid #2d3a5a; border-radius:12px;
+  padding:16px 18px;
 }
-.rl-bet-card h4 { margin:0 0 4px; font-size:14px; color:#c9a227; }
-.rl-bet-card p { margin:0; font-size:13px; color:#8899bb; }
+.rl-bet-card h4 { margin:0 0 6px; font-size:14px; font-weight:700; color:#c9a227; }
+.rl-bet-card p { margin:0; font-size:13px; color:#c8d6f0; line-height:1.7; }
 .rl-payout-badge {
-  display:inline-block; padding:2px 8px; border-radius:4px;
-  background:#0f2d1e; color:#4ade80; font-size:12px; font-weight:700; margin-left:8px;
+  display:inline-block; padding:2px 8px; border-radius:20px;
+  background:#0f2d1e; color:#4ade80; font-size:11px; font-weight:700; margin-left:8px;
 }
 @media (min-width:768px) {
-  .rl-sidebar { display:block; }
-  .rl-tabbar  { display:none; }
-  .rl-inner   { padding:32px 40px; }
+  .rl-sidebar  { display:block; }
+  .rl-tabbar   { display:none; }
+  .rl-inner    { padding:32px 40px; }
 }
 `
 
@@ -143,27 +153,23 @@ const QUIZ = [
 function RulesTab() {
   return (
     <div className="rl-section">
-      <h2>Règles de la Roulette</h2>
-      <h3>Objectif</h3>
-      <p>Prédire sur quel numéro la bille s'arrêtera après que la roue ait terminé de tourner. Les joueurs placent leurs mises avant que le croupier ne lance la bille dans le sens inverse de la roue.</p>
-      <h3>Déroulement d'un tour</h3>
-      <ul>
-        <li><strong>1. Les mises</strong> : Les joueurs placent leurs jetons sur le tapis pendant que le croupier accepte les mises.</li>
-        <li><strong>2. Rien ne va plus</strong> : Le croupier annonce la fin des mises et lance la bille sur la roue.</li>
-        <li><strong>3. Résultat</strong> : La bille s'immobilise dans un casier numéroté. Le croupier annonce le numéro et sa couleur.</li>
-        <li><strong>4. Paiements</strong> : Les mises gagnantes sont payées, les perdantes ramassées.</li>
-      </ul>
-      <h3>La roue européenne</h3>
-      <p>La roulette européenne possède 37 cases numérotées de 0 à 36. L'ordre sur la roue est fixe et non séquentiel : <strong>0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27…</strong> Les numéros rouges et noirs alternent, le 0 est vert.</p>
-      <h3>Avantage de la maison</h3>
-      <p>L'unique zéro vert crée un avantage mathématique de <strong>2.7%</strong> pour le casino. Sur les mises simples chances, cela signifie qu'un joueur perd en moyenne 2.7€ pour chaque 100€ misés à long terme.</p>
-      <h3>Types de mises</h3>
-      <ul>
-        <li><strong>Mises intérieures</strong> : placées sur les numéros (plein, cheval, transversale, carré, sixain)</li>
-        <li><strong>Mises extérieures</strong> : placées en dehors (couleurs, parité, manque/passe, douzaines, colonnes)</li>
-      </ul>
-      <h3>Conseil</h3>
-      <p>La roulette est un jeu de pur hasard. Aucune stratégie ne peut changer l'avantage mathématique de la maison. Les systèmes comme la Martingale augmentent le risque sans améliorer les probabilités.</p>
+      <h2 className="rl-section-title">Règles de la Roulette</h2>
+      {[
+        { icon: '🎯', title: 'Objectif', body: <p>Prédire sur quel numéro la bille s'arrêtera après que la roue ait terminé de tourner. Les joueurs placent leurs mises avant que le croupier ne lance la bille dans le sens inverse de la roue.</p> },
+        { icon: '🔄', title: 'Déroulement d\'un tour', body: <ol><li><strong>Les mises</strong> : Les joueurs placent leurs jetons sur le tapis.</li><li><strong>Rien ne va plus</strong> : Le croupier annonce la fin des mises et lance la bille.</li><li><strong>Résultat</strong> : La bille s'immobilise dans un casier numéroté.</li><li><strong>Paiements</strong> : Les mises gagnantes sont payées, les perdantes ramassées.</li></ol> },
+        { icon: '🎡', title: 'La roue européenne', body: <p>37 cases numérotées de 0 à 36. L'ordre sur la roue est fixe : <strong>0, 32, 15, 19, 4, 21, 2, 25, 17, 34…</strong> Les numéros rouges et noirs alternent, le 0 est vert.</p> },
+        { icon: '📊', title: 'Avantage de la maison', body: <p>L'unique zéro crée un avantage de <strong>2.7%</strong> pour le casino. Un joueur perd en moyenne 2.7€ pour chaque 100€ misés à long terme.</p> },
+        { icon: '🎲', title: 'Types de mises', body: <ul><li><strong>Mises intérieures</strong> : sur les numéros (plein, cheval, transversale, carré, sixain)</li><li><strong>Mises extérieures</strong> : couleurs, parité, manque/passe, douzaines, colonnes</li></ul> },
+        { icon: '💡', title: 'Conseil', body: <p>La roulette est un jeu de pur hasard. Aucune stratégie ne peut réduire l'avantage mathématique. La Martingale augmente le risque sans améliorer les probabilités.</p> },
+      ].map(s => (
+        <div key={s.title} className="rl-card">
+          <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:10 }}>
+            <span style={{ fontSize:20 }}>{s.icon}</span>
+            <h3 style={{ margin:0 }}>{s.title}</h3>
+          </div>
+          {s.body}
+        </div>
+      ))}
     </div>
   )
 }
@@ -171,7 +177,7 @@ function RulesTab() {
 function BetsTab() {
   return (
     <div className="rl-section">
-      <h2>Types de Mises</h2>
+      <h2 className="rl-section-title">Types de Mises</h2>
       {BETS_DATA.map(b => (
         <div className="rl-bet-card" key={b.name}>
           <h4>{b.name} <span className="rl-payout-badge">{b.payout}</span></h4>
@@ -190,7 +196,7 @@ function GlossaryTab() {
   )
   return (
     <div className="rl-section">
-      <h2>Glossaire</h2>
+      <h2 className="rl-section-title">Glossaire</h2>
       <input
         value={search} onChange={e => setSearch(e.target.value)}
         placeholder="Rechercher un terme…"
@@ -201,9 +207,9 @@ function GlossaryTab() {
         }}
       />
       {filtered.map(g => (
-        <div key={g.term} style={{ marginBottom:14 }}>
-          <div style={{ fontWeight:700, color:'#c9a227', fontSize:14, marginBottom:3 }}>{g.term}</div>
-          <div style={{ fontSize:13, color:'#8899bb', lineHeight:1.6 }}>{g.def}</div>
+        <div key={g.term} className="rl-card">
+          <p style={{ fontWeight:700, color:'#c9a227', fontSize:14, marginBottom:6 }}>{g.term}</p>
+          <p style={{ fontSize:13, color:'#c8d6f0', lineHeight:1.7, margin:0 }}>{g.def}</p>
         </div>
       ))}
       {filtered.length === 0 && <p style={{ color:'#8899bb' }}>Aucun terme trouvé.</p>}
@@ -233,7 +239,7 @@ function QuizTab() {
 
   if (done) return (
     <div className="rl-section" style={{ textAlign:'center' }}>
-      <h2>Quiz terminé !</h2>
+      <h2 className="rl-section-title">Quiz terminé !</h2>
       <div style={{ fontSize:48, fontWeight:800, color:'#c9a227', margin:'20px 0' }}>{score}/{QUIZ.length}</div>
       <p>{score >= 5 ? 'Excellent ! Vous maîtrisez la roulette.' : score >= 3 ? 'Bien ! Quelques révisions s\'imposent.' : 'Revoyez les règles et retentez !'}</p>
       <button className="rl-spin-btn" onClick={restart} style={{ marginTop:16 }}>Recommencer</button>
@@ -243,7 +249,7 @@ function QuizTab() {
   const q = QUIZ[current]
   return (
     <div className="rl-section">
-      <h2>Quiz — Roulette</h2>
+      <h2 className="rl-section-title">Quiz — Roulette</h2>
       <div style={{ color:'#8899bb', fontSize:13, marginBottom:16 }}>Question {current+1}/{QUIZ.length} · Score : {score}</div>
       <div style={{ fontWeight:600, color:'#e2e8f0', fontSize:15, marginBottom:16 }}>{q.q}</div>
       {q.opts.map((opt, i) => {
@@ -252,11 +258,11 @@ function QuizTab() {
           if (i === q.ans) cls += ' correct'
           else if (i === selected && i !== q.ans) cls += ' wrong'
         }
-        return <button key={i} className={cls} onClick={() => pick(i)}>{opt}</button>
+        return <button key={i} className={cls} onClick={() => pick(i)} style={{ marginBottom:8 }}>{opt}</button>
       })}
       {selected !== null && (
-        <div style={{ marginTop:12, padding:'12px 16px', background:'#1c2333', borderRadius:8, fontSize:13, color:'#8899bb' }}>
-          {q.exp}
+        <div className="rl-card" style={{ fontSize:13, color:'#c8d6f0', lineHeight:1.7 }}>
+          <strong style={{ color:'#c9a227' }}>Explication : </strong>{q.exp}
         </div>
       )}
       {selected !== null && (
@@ -289,25 +295,17 @@ export default function RouletteApp({ onBack }) {
       </header>
 
       <div className="rl-body">
-        {/* Sidebar */}
+        {/* Desktop sidebar */}
         <nav className="rl-sidebar">
           {TABS.map(t => (
-            <button key={t.id} className={`rl-tab-btn${tab===t.id?' active':''}`} onClick={() => setTab(t.id)}>
-              {t.icon} {t.label}
+            <button key={t.id} className={`rl-sidebar-btn${tab===t.id?' active':''}`} onClick={() => setTab(t.id)}>
+              <span>{t.icon}</span>
+              <span>{t.label}</span>
             </button>
           ))}
         </nav>
 
         <div className="rl-content">
-          {/* Mobile tab bar */}
-          <div className="rl-tabbar">
-            {TABS.map(t => (
-              <button key={t.id} className={`rl-tab-btn${tab===t.id?' active':''}`} onClick={() => setTab(t.id)}>
-                {t.icon} {t.label}
-              </button>
-            ))}
-          </div>
-
           <main>
             <div className="rl-inner">
               {tab === 'rules'    && <RulesTab />}
@@ -319,6 +317,16 @@ export default function RouletteApp({ onBack }) {
           </main>
         </div>
       </div>
+
+      {/* Mobile tab bar — sticky bottom */}
+      <nav className="rl-tabbar">
+        {TABS.map(t => (
+          <button key={t.id} className={`rl-tab-btn${tab===t.id?' active':''}`} onClick={() => setTab(t.id)}>
+            <span className="rl-tab-icon">{t.icon}</span>
+            {t.label}
+          </button>
+        ))}
+      </nav>
     </div>
   )
 }
