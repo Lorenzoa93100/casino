@@ -1,6 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createGame, applyAction, botDecide, bestHand } from './engine.js';
 
+const POKER_ANIM_CSS = `
+  @keyframes pkDeal {
+    from { transform: translateY(-55px) translateX(15px) rotate(10deg); opacity: 0; }
+    to   { transform: none; opacity: 1; }
+  }
+  @keyframes pkFlip {
+    0%   { transform: scaleX(0); opacity: 0; }
+    100% { transform: scaleX(1); opacity: 1; }
+  }
+  .pk-deal { animation: pkDeal 0.38s cubic-bezier(0.2,0.8,0.3,1) both; }
+  .pk-flip { animation: pkFlip 0.4s ease-out both; }
+`
+
 // ─── Hint system ──────────────────────────────────────────────────────────────
 
 function getHint(game, playerId) {
@@ -198,40 +211,56 @@ const nextBtnStyle = {
 const CARD_W = 44;
 const CARD_H = 62;
 
-function CardFace({ card }) {
+function CardFace({ card, delay = 0, flip = false }) {
   if (!card) return <CardSlot />;
   const isRed = card.s === '♥' || card.s === '♦';
-  const color = isRed ? '#dc2626' : '#1c2333';
+  const color = isRed ? '#dc2626' : '#1a1a2e';
   return (
-    <div style={{
-      width: CARD_W, height: CARD_H, background: '#f8f8f0',
-      borderRadius: 6, border: '2px solid #ddd',
-      display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      flexShrink: 0, boxShadow: '0 2px 8px #0004',
-      position: 'relative',
-    }}>
-      <span style={{ fontSize: 12, fontWeight: 800, color, lineHeight: 1, fontFamily: 'monospace' }}>
-        {card.r}
-      </span>
-      <span style={{ fontSize: 18, color, lineHeight: 1 }}>{card.s}</span>
+    <div
+      className={flip ? 'pk-flip' : 'pk-deal'}
+      style={{
+        animationDelay: `${delay}s`,
+        width: CARD_W, height: CARD_H,
+        background: 'linear-gradient(160deg, #fdfdf5 0%, #f2f0e0 100%)',
+        borderRadius: 6, border: '1px solid #ccc9b0',
+        display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        flexShrink: 0,
+        boxShadow: '0 3px 10px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.9)',
+        position: 'relative',
+        color,
+      }}
+    >
+      <div style={{ position: 'absolute', top: 2, left: 3, fontSize: 8, fontWeight: 800, lineHeight: 1.2, textAlign: 'center' }}>
+        <div>{card.r}</div>
+        <div style={{ fontSize: 7 }}>{card.s}</div>
+      </div>
+      <span style={{ fontSize: 16, color }}>{card.s}</span>
+      <div style={{ position: 'absolute', bottom: 2, right: 3, fontSize: 8, fontWeight: 800, lineHeight: 1.2, textAlign: 'center', transform: 'rotate(180deg)', color }}>
+        <div>{card.r}</div>
+        <div style={{ fontSize: 7 }}>{card.s}</div>
+      </div>
     </div>
   );
 }
 
-function CardBack() {
+function CardBack({ delay = 0 }) {
   return (
-    <div style={{
-      width: CARD_W, height: CARD_H, borderRadius: 6,
-      background: 'linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #1a237e 100%)',
-      border: '2px solid #3949ab', flexShrink: 0,
-      boxShadow: '0 2px 8px #0006',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-    }}>
+    <div
+      className="pk-deal"
+      style={{
+        animationDelay: `${delay}s`,
+        width: CARD_W, height: CARD_H, borderRadius: 6,
+        background: 'linear-gradient(145deg, #1a3580 0%, #1e40af 40%, #1a3580 100%)',
+        border: '2px solid #2d55e8', flexShrink: 0,
+        boxShadow: '0 3px 10px rgba(0,0,0,0.55)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}
+    >
       <div style={{
-        width: CARD_W - 12, height: CARD_H - 12, borderRadius: 4,
-        border: '1px solid #5c6bc055',
-        background: 'repeating-linear-gradient(45deg, #1a237e22 0px, #1a237e22 4px, #3949ab22 4px, #3949ab22 8px)',
+        width: CARD_W - 10, height: CARD_H - 10, borderRadius: 4,
+        border: '1px solid #3b68f5',
+        background: 'repeating-linear-gradient(45deg, #1a3580, #1a3580 3px, #1e40af 3px, #1e40af 6px)',
       }} />
     </div>
   );
@@ -410,7 +439,7 @@ function PlayerPanel({ player, isCurrentTurn, isDealer, isSB, isBB, showCards, i
       {/* Cards */}
       <div style={{ display: 'flex', gap: 4 }}>
         {showCards || isHuman
-          ? (player.holeCards || []).map((c, i) => <CardFace key={i} card={c} />)
+          ? (player.holeCards || []).map((c, i) => <CardFace key={c.r + c.s} card={c} delay={i * 0.1} />)
           : player.folded
             ? [0, 1].map(i => (
                 <div key={i} style={{
@@ -419,7 +448,7 @@ function PlayerPanel({ player, isCurrentTurn, isDealer, isSB, isBB, showCards, i
                   opacity: 0.4, flexShrink: 0,
                 }} />
               ))
-            : [0, 1].map(i => <CardBack key={i} />)
+            : [0, 1].map(i => <CardBack key={i} delay={i * 0.1} />)
         }
       </div>
 
@@ -594,6 +623,7 @@ function GameScreen({ game, setGame, onBack, onNextHand }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 0, minHeight: 500 }}>
+      <style>{POKER_ANIM_CSS}</style>
       {/* Header */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -661,18 +691,19 @@ function GameScreen({ game, setGame, onBack, onNextHand }) {
 
         {/* Table oval */}
         <div style={{
-          background: 'linear-gradient(135deg, #14532d 0%, #15803d 50%, #14532d 100%)',
-          border: '4px solid #166534',
-          borderRadius: 60,
-          padding: '20px 28px',
-          width: '100%', maxWidth: 480,
+          background: 'radial-gradient(ellipse at 50% 50%, #2d8a4e 0%, #1a5c32 45%, #0a3018 100%)',
+          border: '6px solid #8B6914',
+          borderRadius: '50% / 38%',
+          padding: '22px 44px',
+          width: '100%', maxWidth: 500,
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12,
-          boxShadow: '0 8px 32px #00000060, inset 0 2px 8px #ffffff10',
+          boxShadow: '0 10px 40px rgba(0,0,0,0.75), inset 0 2px 10px rgba(255,255,255,0.07), 0 0 0 2px #c9a22720',
+          position: 'relative',
         }}>
           {/* Community cards */}
           <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
             {communitySlots.map((card, i) => (
-              card ? <CardFace key={i} card={card} /> : <CardSlot key={i} />
+              card ? <CardFace key={card.r + card.s} card={card} delay={i * 0.08} /> : <CardSlot key={i} />
             ))}
           </div>
 

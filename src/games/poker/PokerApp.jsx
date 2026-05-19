@@ -154,7 +154,7 @@ function Card({ label }) {
 }
 
 export default function PokerApp({ onBack }) {
-  const [tab, setTab] = useState("hands");
+  const [tab, setTab] = useState("rules");
   const [selectedHand, setSelectedHand] = useState(null);
   const [quizIdx, setQuizIdx] = useState(0);
   const [quizAnswer, setQuizAnswer] = useState(null);
@@ -163,6 +163,7 @@ export default function PokerApp({ onBack }) {
   const [glossSearch, setGlossSearch] = useState("");
 
   const tabs = [
+    { id: "rules", label: "Règles", icon: "📋" },
     { id: "hands", label: "Mains", icon: "🃏" },
     { id: "positions", label: "Positions", icon: "🎯" },
     { id: "glossary", label: "Glossaire", icon: "📖" },
@@ -226,8 +227,8 @@ export default function PokerApp({ onBack }) {
         .poker-content {
           flex: 1;
           overflow: auto;
-          padding: 16px;
         }
+        .poker-inner { padding: 16px; }
         .hands-grid {
           display: flex;
           flex-direction: column;
@@ -271,9 +272,7 @@ export default function PokerApp({ onBack }) {
             gap: 4px;
             flex-shrink: 0;
           }
-          .poker-content {
-            padding: 24px 28px;
-          }
+          .poker-inner { padding: 24px 28px; max-width: 680px; margin: 0 auto; }
           .hands-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -381,6 +380,106 @@ export default function PokerApp({ onBack }) {
 
           {/* Content */}
           <div className="poker-content">
+          <div className="poker-inner">
+
+            {/* RULES TAB */}
+            {tab === "rules" && (
+  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+    <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 22, color: "#c9a227", marginBottom: 4 }}>
+      Texas Hold'em — Règles
+    </h2>
+    {[
+      {
+        icon: "🎯", title: "Objectif",
+        text: "Remporter le pot en formant la meilleure main de 5 cartes parmi vos 2 cartes privées et les 5 cartes communes, ou en faisant fuir tous vos adversaires par des mises stratégiques.",
+      },
+      {
+        icon: "💰", title: "Les blindes",
+        text: null,
+        items: [
+          { label: "Small Blind (SB)", desc: "Le joueur à gauche du dealer doit poster une mise obligatoire (la moitié de la blinde)." },
+          { label: "Big Blind (BB)", desc: "Le joueur suivant poste le double. C'est la mise de référence de la manche." },
+        ],
+      },
+      {
+        icon: "🃏", title: "Distribution",
+        text: "Chaque joueur reçoit 2 cartes cachées (hole cards), visibles seulement par lui. Ces cartes combinées avec les 5 cartes communes forment votre main finale.",
+      },
+      {
+        icon: "🔄", title: "Les 4 rounds de mise",
+        text: null,
+        steps: [
+          { label: "Pré-flop", desc: "Avant toute carte commune. L'action commence à gauche du BB." },
+          { label: "Flop", desc: "3 cartes communes sont dévoilées. Nouveau tour de mises." },
+          { label: "Turn", desc: "1 carte supplémentaire. Nouveau tour de mises." },
+          { label: "River", desc: "La 5ème et dernière carte commune. Dernier tour de mises." },
+        ],
+      },
+      {
+        icon: "⚡", title: "Actions disponibles",
+        text: null,
+        items: [
+          { label: "Fold", desc: "Abandonner sa main. On perd les mises déjà investies." },
+          { label: "Check", desc: "Passer sans miser (si personne n'a misé avant soi)." },
+          { label: "Call", desc: "Suivre la mise de l'adversaire pour rester en jeu." },
+          { label: "Raise", desc: "Surenchérir — force les autres à payer plus ou à se coucher." },
+          { label: "All-in", desc: "Miser tous ses jetons. On reste en jeu pour la part du pot qu'on peut gagner." },
+        ],
+      },
+      {
+        icon: "🏆", title: "Le Showdown",
+        text: "Si deux joueurs ou plus sont encore en jeu après la river, ils retournent leurs cartes. Le joueur avec la meilleure combinaison de 5 cartes (parmi ses 2 hole cards + les 5 communes) remporte le pot.",
+      },
+      {
+        icon: "🔁", title: "Main suivante",
+        text: "Le bouton de dealer (D) tourne d'un joueur vers la gauche. Les rôles SB et BB changent également. Chacun joue chaque position à tour de rôle.",
+      },
+    ].map((section, si) => (
+      <div key={si} style={{ background: "#1c2333", border: "1px solid #2d3a5a", borderRadius: 10, padding: "14px 16px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+          <span style={{ fontSize: 20 }}>{section.icon}</span>
+          <span style={{ fontWeight: 700, fontSize: 15, color: "#e2e8f0" }}>{section.title}</span>
+        </div>
+        {section.text && (
+          <p style={{ fontSize: 13, color: "#c8d6f0", lineHeight: 1.7 }}>{section.text}</p>
+        )}
+        {section.steps && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {section.steps.map((s, i) => (
+              <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                <span style={{
+                  fontSize: 11, fontWeight: 700, color: "#c9a227",
+                  background: "#c9a22715", padding: "2px 8px", borderRadius: 20,
+                  whiteSpace: "nowrap", flexShrink: 0, marginTop: 2,
+                }}>{s.label}</span>
+                <span style={{ fontSize: 13, color: "#c8d6f0", lineHeight: 1.6 }}>{s.desc}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        {section.items && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {section.items.map((it, i) => (
+              <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                <span style={{
+                  fontSize: 11, fontWeight: 700, color: "#c9a227",
+                  background: "#c9a22715", padding: "2px 8px", borderRadius: 20,
+                  whiteSpace: "nowrap", flexShrink: 0, marginTop: 2,
+                }}>{it.label}</span>
+                <span style={{ fontSize: 13, color: "#c8d6f0", lineHeight: 1.6 }}>{it.desc}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    ))}
+    <div style={{ background: "#c9a22712", border: "1px solid #c9a22730", borderRadius: 10, padding: 14 }}>
+      <p style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.7 }}>
+        💡 <strong style={{ color: "#c9a227" }}>Conseil débutant :</strong> Concentrez-vous d'abord sur votre position à la table et la force de vos cartes de départ. La position (parler en dernier) est l'un des avantages les plus importants au poker.
+      </p>
+    </div>
+  </div>
+)}
 
             {/* HANDS TAB */}
             {tab === "hands" && !selectedHand && (
@@ -613,6 +712,7 @@ export default function PokerApp({ onBack }) {
             {tab === "play" && <PokerGame />}
 
           </div>
+          </div> {/* fin poker-content */}
         </div>
       </div>
     </div>
