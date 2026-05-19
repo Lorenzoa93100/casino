@@ -623,7 +623,7 @@ export default function BlackjackGame() {
   }
 
   return (
-    <div style={{ padding: '8px 0', display: 'flex', flexDirection: 'column', gap: 20 }}>
+    <div style={{ padding: '8px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, width: '100%' }}>
       <style>{ANIM_CSS}</style>
 
       {/* Table always visible once cards dealt */}
