@@ -285,6 +285,243 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ─── Barre solde / mises ───────────────────────────────────────────────────── */
+.rl-balance-bar {
+  display: flex;
+  gap: 24px;
+  font-size: 14px;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+.rl-balance-gold  { color: #c9a227; }
+.rl-balance-amber { color: #f59e0b; }
+
+/* ─── Roue (wrapper pour centrage) ─────────────────────────────────────────── */
+.rl-felt-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ─── Colonnes du jeu (roue + table) ───────────────────────────────────────── */
+.rl-wheel-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.rl-table-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* ─── Résultat après spin ───────────────────────────────────────────────────── */
+/* rl-result-box ajoute l'animation ; rl-result-card donne le style de carte */
+.rl-result-card {
+  background: #1e2740;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 320px;
+}
+.rl-result-win  { border-color: #22c55e; background: #052e16; }
+.rl-result-lose { border-color: #ef4444; background: #1c0505; }
+
+.rl-result-headline {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0 0 6px;
+}
+.rl-result-primary {
+  font-size: 14px;
+  color: #c8d6f0;
+  margin: 4px 0 0;
+}
+.rl-result-secondary {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 2px 0 0;
+}
+/* Texte doré dans les résultats */
+.rl-gold { color: #c9a227; }
+
+/* ─── Sélecteur de jetons ───────────────────────────────────────────────────── */
+.rl-chip-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.rl-chip-label {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-right: 4px;
+}
+/* Jeton actif : contour blanc pour indiquer la sélection */
+.rl-chip-active {
+  border-color: #fff !important;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.4), 0 4px 0 rgba(0,0,0,0.4);
+  transform: translateY(-2px);
+}
+
+/* ─── Table de mise (fond feutré) ───────────────────────────────────────────── */
+.rl-betting-table {
+  background: #14532d;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 2px solid #166534;
+}
+
+/* Ligne du zéro */
+.rl-zero-row {
+  display: flex;
+  justify-content: center;
+}
+
+/* Cellule zéro (verte, plus grande) */
+.rl-num-zero {
+  background: #16a34a !important;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 4px;
+  width: 48px;
+}
+
+/* Numéro avec une mise posée dessus */
+.rl-num-bet {
+  outline: 2px solid #fbbf24;
+  outline-offset: -1px;
+}
+
+/* Grille des numéros 1-36 */
+.rl-grid-row {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+.rl-grid-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Rangée des douzaines */
+.rl-dozens-row {
+  display: flex;
+  gap: 4px;
+}
+.rl-dozens-row .rl-outside-btn {
+  flex: 1;
+  background: #1e3a2a;
+  border: 1px solid #166534;
+  color: #f1f5f9;
+}
+.rl-dozens-row .rl-outside-btn.rl-outside-active {
+  background: #14532d;
+  border-color: #fbbf24;
+  outline: 2px solid #fbbf24;
+}
+
+/* Rangée chances simples */
+.rl-even-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.rl-even-row .rl-outside-btn {
+  flex: 1;
+  min-width: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 4px;
+  background: #1e3a2a;
+  border: 1px solid #166534;
+  color: #f1f5f9;
+}
+.rl-even-row .rl-outside-btn.rl-outside-active {
+  border-color: #fbbf24;
+  outline: 2px solid #fbbf24;
+}
+
+/* Bouton rouge / noir */
+.rl-red-btn   { background: #7f1d1d !important; border-color: #991b1b !important; }
+.rl-black-btn { background: #111 !important; border-color: #333 !important; }
+
+/* Mise extérieure active (générique — outline doré) */
+.rl-outside-active {
+  outline: 2px solid #fbbf24;
+  outline-offset: -1px;
+}
+
+/* Petite indication de payout dans les boutons */
+.rl-payout-hint {
+  font-size: 10px;
+  opacity: 0.7;
+  margin-left: 4px;
+}
+/* Ligne secondaire dans les boutons (ex: 1-18) */
+.rl-sub {
+  font-size: 10px;
+  opacity: 0.6;
+  display: block;
+}
+
+/* ─── Résumé des mises actives ──────────────────────────────────────────────── */
+.rl-bets-summary {
+  font-size: 11px;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+/* ─── Actions (Lancer / Effacer) ────────────────────────────────────────────── */
+.rl-actions-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Bouton Effacer */
+.rl-clear-btn {
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #1e2740;
+  color: #f1f5f9;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+.rl-clear-btn:hover { opacity: 0.8; }
+
+/* Bouton Recharger (solde épuisé) */
+.rl-reload-btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: 1px solid #c9a227;
+  background: transparent;
+  color: #c9a227;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  margin-top: 8px;
+  transition: background 0.15s;
+}
+.rl-reload-btn:hover { background: #c9a22718; }
+
 /* ─── Responsive desktop ────────────────────────────────────────────────────── */
 @media (min-width: 768px) {
   .rl-sidebar { display: block; }
