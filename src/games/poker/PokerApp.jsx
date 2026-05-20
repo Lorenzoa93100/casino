@@ -154,450 +154,460 @@ function Card({ label }) {
   );
 }
 
-export default function PokerApp({ onBack }) {
-  const [tab, setTab] = useState("rules");
-  const [selectedHand, setSelectedHand] = useState(null);
-  const [quizIdx, setQuizIdx] = useState(0);
-  const [quizAnswer, setQuizAnswer] = useState(null);
-  const [quizScore, setQuizScore] = useState(0);
-  const [quizDone, setQuizDone] = useState(false);
-  const [glossSearch, setGlossSearch] = useState("");
-
-  const tabs = [
-    { id: "rules", label: "Règles", icon: "📋" },
-    { id: "hands", label: "Mains", icon: "🃏" },
-    { id: "positions", label: "Positions", icon: "🎯" },
-    { id: "glossary", label: "Glossaire", icon: "📖" },
-    { id: "quiz", label: "Quiz", icon: "⚡" },
-    { id: "play", label: "Jouer", icon: "🎮" },
-  ];
-
-  const handleQuizAnswer = (idx) => {
-    if (quizAnswer !== null) return;
-    setQuizAnswer(idx);
-    if (idx === QUIZ[quizIdx].answer) setQuizScore(s => s + 1);
-  };
-
-  const nextQuestion = () => {
-    if (quizIdx + 1 >= QUIZ.length) setQuizDone(true);
-    else { setQuizIdx(i => i + 1); setQuizAnswer(null); }
-  };
-
-  const resetQuiz = () => {
-    setQuizIdx(0); setQuizAnswer(null); setQuizScore(0); setQuizDone(false);
-  };
-
-  const filteredGloss = GLOSSARY.filter(g =>
-    g.term.toLowerCase().includes(glossSearch.toLowerCase()) ||
-    g.def.toLowerCase().includes(glossSearch.toLowerCase())
+function SectionTitle({ children }) {
+  return (
+    <h2 style={{
+      fontFamily: "'DM Serif Display', serif",
+      fontSize: 20, color: '#c9a227', marginBottom: 16,
+    }}>
+      {children}
+    </h2>
   );
+}
+
+function RulesTab() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <SectionTitle>Texas Hold'em — Règles</SectionTitle>
+      {[
+        {
+          icon: "🎯", title: "Objectif",
+          text: "Remporter le pot en formant la meilleure main de 5 cartes parmi vos 2 cartes privées et les 5 cartes communes, ou en faisant fuir tous vos adversaires par des mises stratégiques.",
+        },
+        {
+          icon: "💰", title: "Les blindes",
+          items: [
+            { label: "Small Blind (SB)", desc: "Le joueur à gauche du dealer doit poster une mise obligatoire (la moitié de la blinde)." },
+            { label: "Big Blind (BB)", desc: "Le joueur suivant poste le double. C'est la mise de référence de la manche." },
+          ],
+        },
+        {
+          icon: "🃏", title: "Distribution",
+          text: "Chaque joueur reçoit 2 cartes cachées (hole cards), visibles seulement par lui. Ces cartes combinées avec les 5 cartes communes forment votre main finale.",
+        },
+        {
+          icon: "🔄", title: "Les 4 rounds de mise",
+          steps: [
+            { label: "Pré-flop", desc: "Avant toute carte commune. L'action commence à gauche du BB." },
+            { label: "Flop", desc: "3 cartes communes sont dévoilées. Nouveau tour de mises." },
+            { label: "Turn", desc: "1 carte supplémentaire. Nouveau tour de mises." },
+            { label: "River", desc: "La 5ème et dernière carte commune. Dernier tour de mises." },
+          ],
+        },
+        {
+          icon: "⚡", title: "Actions disponibles",
+          items: [
+            { label: "Fold", desc: "Abandonner sa main. On perd les mises déjà investies." },
+            { label: "Check", desc: "Passer sans miser (si personne n'a misé avant soi)." },
+            { label: "Call", desc: "Suivre la mise de l'adversaire pour rester en jeu." },
+            { label: "Raise", desc: "Surenchérir — force les autres à payer plus ou à se coucher." },
+            { label: "All-in", desc: "Miser tous ses jetons. On reste en jeu pour la part du pot qu'on peut gagner." },
+          ],
+        },
+        {
+          icon: "🏆", title: "Le Showdown",
+          text: "Si deux joueurs ou plus sont encore en jeu après la river, ils retournent leurs cartes. Le joueur avec la meilleure combinaison de 5 cartes (parmi ses 2 hole cards + les 5 communes) remporte le pot.",
+        },
+        {
+          icon: "🔁", title: "Main suivante",
+          text: "Le bouton de dealer (D) tourne d'un joueur vers la gauche. Les rôles SB et BB changent également. Chacun joue chaque position à tour de rôle.",
+        },
+      ].map((section, si) => (
+        <div key={si} style={{ background: "#1c2333", border: "1px solid #2d3a5a", borderRadius: 10, padding: "14px 16px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+            <span style={{ fontSize: 20 }}>{section.icon}</span>
+            <span style={{ fontWeight: 700, fontSize: 15, color: "#e2e8f0" }}>{section.title}</span>
+          </div>
+          {section.text && (
+            <p style={{ fontSize: 13, color: "#c8d6f0", lineHeight: 1.7 }}>{section.text}</p>
+          )}
+          {section.steps && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {section.steps.map((s, i) => (
+                <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                  <span style={{
+                    fontSize: 11, fontWeight: 700, color: "#c9a227",
+                    background: "#c9a22715", padding: "2px 8px", borderRadius: 20,
+                    whiteSpace: "nowrap", flexShrink: 0, marginTop: 2,
+                  }}>{s.label}</span>
+                  <span style={{ fontSize: 13, color: "#c8d6f0", lineHeight: 1.6 }}>{s.desc}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {section.items && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {section.items.map((it, i) => (
+                <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                  <span style={{
+                    fontSize: 11, fontWeight: 700, color: "#c9a227",
+                    background: "#c9a22715", padding: "2px 8px", borderRadius: 20,
+                    whiteSpace: "nowrap", flexShrink: 0, marginTop: 2,
+                  }}>{it.label}</span>
+                  <span style={{ fontSize: 13, color: "#c8d6f0", lineHeight: 1.6 }}>{it.desc}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+      <div style={{ background: "#c9a22712", border: "1px solid #c9a22730", borderRadius: 10, padding: 14 }}>
+        <p style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.7 }}>
+          💡 <strong style={{ color: "#c9a227" }}>Conseil débutant :</strong> Concentrez-vous d'abord sur votre position à la table et la force de vos cartes de départ. La position (parler en dernier) est l'un des avantages les plus importants au poker.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function HandsTab() {
+  const [selected, setSelected] = useState(null);
+
+  if (selected) {
+    return (
+      <div>
+        <button onClick={() => setSelected(null)} style={{
+          background: "none", border: "none", color: "#c9a227", cursor: "pointer",
+          fontSize: 13, marginBottom: 20, display: "flex", alignItems: "center", gap: 6, padding: 0,
+        }}>← Retour</button>
+
+        <div style={{ textAlign: "center", marginBottom: 24 }}>
+          <div style={{ fontSize: 44, marginBottom: 8 }}>{selected.emoji}</div>
+          <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 26, color: "#c9a227" }}>
+            {selected.name}
+          </h2>
+          <span style={{ fontSize: 11, color: "#8899bb", textTransform: "uppercase", letterSpacing: 2 }}>
+            Rang #{selected.rank}
+          </span>
+        </div>
+
+        <div style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 24, flexWrap: "wrap" }}>
+          {selected.cards.map((c, i) => <Card key={i} label={c} />)}
+        </div>
+
+        <div className="pk-hand-detail-layout">
+          <div style={{ background: "#1c2333", borderRadius: 10, padding: 16 }}>
+            <p style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{selected.description}</p>
+          </div>
+          <div style={{ background: "#1c2333", borderRadius: 10, padding: 16 }}>
+            <div style={{ fontSize: 10, color: "#8899bb", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>Probabilité</div>
+            <div style={{ fontSize: 20, fontWeight: 700, color: "#c9a227", marginBottom: 12 }}>{selected.probability}</div>
+            <div style={{ fontSize: 10, color: "#c9a227", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>💡 Conseil</div>
+            <p style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{selected.tip}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
-      <div className="poker-layout">
-        {/* Header */}
-        <div style={{
-          padding: "16px 20px",
-          background: "#111827",
-          borderBottom: "1px solid #2d3a5a",
-          position: "sticky", top: 0, zIndex: 10,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <span style={{ fontSize: 30 }}>♠</span>
-            <div style={{ flex: 1 }}>
-              <h1 style={{ fontSize: 22, fontFamily: "'DM Serif Display', serif", color: "#c9a227", lineHeight: 1.2 }}>
-                Poker School
-              </h1>
-              <p style={{ fontSize: 11, color: "#8899bb", letterSpacing: 2, textTransform: "uppercase" }}>
-                Apprends à jouer
-              </p>
-            </div>
-            {onBack && (
-              <button onClick={onBack} style={{
-                background: "#2d3a5a", border: "1px solid #c9a22740", color: "#c9a227",
-                borderRadius: 8, padding: "6px 14px", fontSize: 12, fontWeight: 600,
-                cursor: "pointer", fontFamily: "'DM Sans', sans-serif", letterSpacing: 1,
-                flexShrink: 0,
-              }}>
-                ← Accueil
-              </button>
-            )}
-          </div>
-        </div>
-
-        <div className="poker-body">
-          {/* Desktop sidebar tabs */}
-          <div className="poker-tabs-sidebar">
-            {tabs.map(t => (
-              <button key={t.id} className="tab-btn" onClick={() => { setTab(t.id); setSelectedHand(null); }}
-                style={{
-                  padding: "12px 16px", background: tab === t.id ? "#c9a22715" : "none",
-                  border: "none", borderRadius: 8,
-                  borderLeft: tab === t.id ? "3px solid #c9a227" : "3px solid transparent",
-                  cursor: "pointer", color: tab === t.id ? "#c9a227" : "#8899bb",
-                  fontSize: 13, fontWeight: 600, textAlign: "left",
-                  display: "flex", alignItems: "center", gap: 10,
-                  fontFamily: "'DM Sans', sans-serif", transition: "all 0.15s",
-                }}>
-                <span style={{ fontSize: 18 }}>{t.icon}</span>
-                {t.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Content */}
-          <div className="poker-content">
-          <div className="poker-inner">
-
-            {/* RULES TAB */}
-            {tab === "rules" && (
-  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-    <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 22, color: "#c9a227", marginBottom: 4 }}>
-      Texas Hold'em — Règles
-    </h2>
-    {[
-      {
-        icon: "🎯", title: "Objectif",
-        text: "Remporter le pot en formant la meilleure main de 5 cartes parmi vos 2 cartes privées et les 5 cartes communes, ou en faisant fuir tous vos adversaires par des mises stratégiques.",
-      },
-      {
-        icon: "💰", title: "Les blindes",
-        text: null,
-        items: [
-          { label: "Small Blind (SB)", desc: "Le joueur à gauche du dealer doit poster une mise obligatoire (la moitié de la blinde)." },
-          { label: "Big Blind (BB)", desc: "Le joueur suivant poste le double. C'est la mise de référence de la manche." },
-        ],
-      },
-      {
-        icon: "🃏", title: "Distribution",
-        text: "Chaque joueur reçoit 2 cartes cachées (hole cards), visibles seulement par lui. Ces cartes combinées avec les 5 cartes communes forment votre main finale.",
-      },
-      {
-        icon: "🔄", title: "Les 4 rounds de mise",
-        text: null,
-        steps: [
-          { label: "Pré-flop", desc: "Avant toute carte commune. L'action commence à gauche du BB." },
-          { label: "Flop", desc: "3 cartes communes sont dévoilées. Nouveau tour de mises." },
-          { label: "Turn", desc: "1 carte supplémentaire. Nouveau tour de mises." },
-          { label: "River", desc: "La 5ème et dernière carte commune. Dernier tour de mises." },
-        ],
-      },
-      {
-        icon: "⚡", title: "Actions disponibles",
-        text: null,
-        items: [
-          { label: "Fold", desc: "Abandonner sa main. On perd les mises déjà investies." },
-          { label: "Check", desc: "Passer sans miser (si personne n'a misé avant soi)." },
-          { label: "Call", desc: "Suivre la mise de l'adversaire pour rester en jeu." },
-          { label: "Raise", desc: "Surenchérir — force les autres à payer plus ou à se coucher." },
-          { label: "All-in", desc: "Miser tous ses jetons. On reste en jeu pour la part du pot qu'on peut gagner." },
-        ],
-      },
-      {
-        icon: "🏆", title: "Le Showdown",
-        text: "Si deux joueurs ou plus sont encore en jeu après la river, ils retournent leurs cartes. Le joueur avec la meilleure combinaison de 5 cartes (parmi ses 2 hole cards + les 5 communes) remporte le pot.",
-      },
-      {
-        icon: "🔁", title: "Main suivante",
-        text: "Le bouton de dealer (D) tourne d'un joueur vers la gauche. Les rôles SB et BB changent également. Chacun joue chaque position à tour de rôle.",
-      },
-    ].map((section, si) => (
-      <div key={si} style={{ background: "#1c2333", border: "1px solid #2d3a5a", borderRadius: 10, padding: "14px 16px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-          <span style={{ fontSize: 20 }}>{section.icon}</span>
-          <span style={{ fontWeight: 700, fontSize: 15, color: "#e2e8f0" }}>{section.title}</span>
-        </div>
-        {section.text && (
-          <p style={{ fontSize: 13, color: "#c8d6f0", lineHeight: 1.7 }}>{section.text}</p>
-        )}
-        {section.steps && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            {section.steps.map((s, i) => (
-              <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                <span style={{
-                  fontSize: 11, fontWeight: 700, color: "#c9a227",
-                  background: "#c9a22715", padding: "2px 8px", borderRadius: 20,
-                  whiteSpace: "nowrap", flexShrink: 0, marginTop: 2,
-                }}>{s.label}</span>
-                <span style={{ fontSize: 13, color: "#c8d6f0", lineHeight: 1.6 }}>{s.desc}</span>
-              </div>
-            ))}
-          </div>
-        )}
-        {section.items && (
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            {section.items.map((it, i) => (
-              <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                <span style={{
-                  fontSize: 11, fontWeight: 700, color: "#c9a227",
-                  background: "#c9a22715", padding: "2px 8px", borderRadius: 20,
-                  whiteSpace: "nowrap", flexShrink: 0, marginTop: 2,
-                }}>{it.label}</span>
-                <span style={{ fontSize: 13, color: "#c8d6f0", lineHeight: 1.6 }}>{it.desc}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    ))}
-    <div style={{ background: "#c9a22712", border: "1px solid #c9a22730", borderRadius: 10, padding: 14 }}>
-      <p style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.7 }}>
-        💡 <strong style={{ color: "#c9a227" }}>Conseil débutant :</strong> Concentrez-vous d'abord sur votre position à la table et la force de vos cartes de départ. La position (parler en dernier) est l'un des avantages les plus importants au poker.
+      <SectionTitle>Combinaisons</SectionTitle>
+      <p style={{ fontSize: 12, color: "#8899bb", marginBottom: 16, textAlign: "center" }}>
+        Du plus fort au plus faible — cliquez pour les détails
       </p>
-    </div>
-  </div>
-)}
-
-            {/* HANDS TAB */}
-            {tab === "hands" && !selectedHand && (
-              <div>
-                <p style={{ fontSize: 12, color: "#8899bb", marginBottom: 16, textAlign: "center" }}>
-                  Du plus fort au plus faible — clique pour les détails
-                </p>
-                <div className="hands-grid">
-                  {HANDS.map((hand, i) => (
-                    <div key={i} className="hand-card" onClick={() => setSelectedHand(hand)}
-                      style={{
-                        background: "#1c2333", border: "1px solid #2d3a5a", borderRadius: 10,
-                        padding: "12px 14px", display: "flex", alignItems: "center", gap: 12,
-                      }}>
-                      <div style={{
-                        width: 38, height: 38, borderRadius: 8, background: "#c9a22715",
-                        border: "1px solid #c9a22730", display: "flex", alignItems: "center",
-                        justifyContent: "center", fontSize: 18, flexShrink: 0,
-                      }}>{hand.emoji}</div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <span style={{ fontWeight: 600, fontSize: 13, color: "#e2e8f0" }}>{hand.name}</span>
-                          <span style={{ fontSize: 10, color: "#c9a227", background: "#c9a22715", padding: "2px 6px", borderRadius: 10 }}>
-                            #{hand.rank}
-                          </span>
-                        </div>
-                        <span style={{ fontSize: 11, color: "#8899bb" }}>{hand.short}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+      <div className="pk-hands-grid">
+        {HANDS.map((hand, i) => (
+          <div key={i} className="pk-hand-card" onClick={() => setSelected(hand)}
+            style={{
+              background: "#1c2333", border: "1px solid #2d3a5a", borderRadius: 10,
+              padding: "12px 14px", display: "flex", alignItems: "center", gap: 12,
+            }}>
+            <div style={{
+              width: 38, height: 38, borderRadius: 8, background: "#c9a22715",
+              border: "1px solid #c9a22730", display: "flex", alignItems: "center",
+              justifyContent: "center", fontSize: 18, flexShrink: 0,
+            }}>{hand.emoji}</div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontWeight: 600, fontSize: 13, color: "#e2e8f0" }}>{hand.name}</span>
+                <span style={{ fontSize: 10, color: "#c9a227", background: "#c9a22715", padding: "2px 6px", borderRadius: 10 }}>
+                  #{hand.rank}
+                </span>
               </div>
-            )}
-
-            {tab === "hands" && selectedHand && (
-              <div>
-                <button onClick={() => setSelectedHand(null)} style={{
-                  background: "none", border: "none", color: "#c9a227", cursor: "pointer",
-                  fontSize: 13, marginBottom: 20, display: "flex", alignItems: "center", gap: 6, padding: 0,
-                }}>← Retour</button>
-
-                <div style={{ textAlign: "center", marginBottom: 24 }}>
-                  <div style={{ fontSize: 44, marginBottom: 8 }}>{selectedHand.emoji}</div>
-                  <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 26, color: "#c9a227" }}>
-                    {selectedHand.name}
-                  </h2>
-                  <span style={{ fontSize: 11, color: "#8899bb", textTransform: "uppercase", letterSpacing: 2 }}>
-                    Rang #{selectedHand.rank}
-                  </span>
-                </div>
-
-                <div className="hand-detail-full" style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 24, flexWrap: "wrap" }}>
-                  {selectedHand.cards.map((c, i) => <Card key={i} label={c} />)}
-                </div>
-
-                <div className="hand-detail-layout">
-                  <div style={{ background: "#1c2333", borderRadius: 10, padding: 16 }}>
-                    <p style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{selectedHand.description}</p>
-                  </div>
-                  <div style={{ background: "#1c2333", borderRadius: 10, padding: 16 }}>
-                    <div style={{ fontSize: 10, color: "#8899bb", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>Probabilité</div>
-                    <div style={{ fontSize: 20, fontWeight: 700, color: "#c9a227", marginBottom: 12 }}>{selectedHand.probability}</div>
-                    <div style={{ fontSize: 10, color: "#c9a227", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>💡 Conseil</div>
-                    <p style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>{selectedHand.tip}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* POSITIONS TAB */}
-            {tab === "positions" && (
-              <div>
-                <p style={{ fontSize: 12, color: "#8899bb", marginBottom: 12, textAlign: "center" }}>
-                  La position est cruciale au poker
-                </p>
-                <div style={{
-                  background: "#0f2010", border: "3px solid #1a4020", borderRadius: 60,
-                  padding: "20px 14px", marginBottom: 20,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                }}>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center" }}>
-                    {POSITIONS.map((p, i) => (
-                      <div key={i} style={{
-                        background: p.color + "22", border: `1px solid ${p.color}66`, borderRadius: 8,
-                        padding: "6px 12px", fontSize: 12, fontWeight: 700, color: p.color,
-                      }}>{p.name}</div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="positions-grid">
-                  {POSITIONS.map((p, i) => (
-                    <div key={i} style={{
-                      background: "#1c2333", border: `1px solid ${p.color}33`, borderRadius: 10,
-                      padding: "14px 16px",
-                    }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                        <div style={{
-                          background: p.color + "22", color: p.color, fontWeight: 800, fontSize: 13,
-                          padding: "3px 10px", borderRadius: 20,
-                        }}>{p.name}</div>
-                        <span style={{ fontSize: 11, color: "#8899bb" }}>{p.full}</span>
-                      </div>
-                      <p style={{ fontSize: 12, color: "#cbd5e1", lineHeight: 1.5 }}>{p.desc}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div style={{ background: "#c9a22712", border: "1px solid #c9a22730", borderRadius: 10, padding: 14, marginTop: 12 }}>
-                  <p style={{ fontSize: 12, color: "#cbd5e1", lineHeight: 1.6 }}>
-                    💡 <strong style={{ color: "#c9a227" }}>Règle d'or :</strong> Plus tu parles tard, plus tu as d'informations.
-                    Joue des ranges plus larges en position, plus serrées hors position.
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* GLOSSARY TAB */}
-            {tab === "glossary" && (
-              <div>
-                <input
-                  value={glossSearch} onChange={e => setGlossSearch(e.target.value)}
-                  placeholder="Rechercher un terme..."
-                  style={{
-                    width: "100%", background: "#1c2333", border: "1px solid #2d3a5a", borderRadius: 8,
-                    color: "#e2e8f0", padding: "10px 14px", fontSize: 13, marginBottom: 16, outline: "none",
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}
-                />
-                <div className="glossary-grid">
-                  {filteredGloss.map((g, i) => (
-                    <div key={i} style={{
-                      background: "#1c2333", border: "1px solid #2d3a5a", borderRadius: 10,
-                      padding: "12px 14px",
-                    }}>
-                      <div style={{ fontWeight: 700, color: "#c9a227", fontSize: 14, marginBottom: 4 }}>{g.term}</div>
-                      <p style={{ fontSize: 12, color: "#94a3b8", lineHeight: 1.5 }}>{g.def}</p>
-                    </div>
-                  ))}
-                </div>
-                {filteredGloss.length === 0 && (
-                  <p style={{ textAlign: "center", color: "#8899bb", marginTop: 30 }}>Aucun résultat</p>
-                )}
-              </div>
-            )}
-
-            {/* QUIZ TAB */}
-            {tab === "quiz" && !quizDone && (
-              <div className="quiz-container">
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-                  <span style={{ fontSize: 12, color: "#8899bb" }}>Question {quizIdx + 1}/{QUIZ.length}</span>
-                  <span style={{ fontSize: 12, color: "#c9a227", fontWeight: 700 }}>Score: {quizScore}</span>
-                </div>
-
-                <div style={{ background: "#2d3a5a", borderRadius: 4, height: 4, marginBottom: 20 }}>
-                  <div style={{
-                    background: "#c9a227", height: 4, borderRadius: 4,
-                    width: `${((quizIdx + (quizAnswer !== null ? 1 : 0)) / QUIZ.length) * 100}%`,
-                    transition: "width 0.3s",
-                  }} />
-                </div>
-
-                <div style={{ background: "#1c2333", borderRadius: 12, padding: 18, marginBottom: 16 }}>
-                  <p style={{ fontSize: 14, color: "#e2e8f0", lineHeight: 1.6 }}>{QUIZ[quizIdx].q}</p>
-                </div>
-
-                {QUIZ[quizIdx].options.map((opt, i) => {
-                  const isCorrect = i === QUIZ[quizIdx].answer;
-                  const isSelected = i === quizAnswer;
-                  let bg = "#1c2333", border = "#2d3a5a", color = "#cbd5e1";
-                  if (quizAnswer !== null) {
-                    if (isCorrect) { bg = "#14532d"; border = "#22c55e"; color = "#86efac"; }
-                    else if (isSelected) { bg = "#450a0a"; border = "#ef4444"; color = "#fca5a5"; }
-                  }
-                  return (
-                    <button key={i} className="ans-btn" onClick={() => handleQuizAnswer(i)} disabled={quizAnswer !== null}
-                      style={{
-                        width: "100%", background: bg, border: `1px solid ${border}`,
-                        borderRadius: 10, padding: "13px 16px", marginBottom: 8,
-                        cursor: quizAnswer !== null ? "default" : "pointer",
-                        color, fontSize: 13, textAlign: "left", fontFamily: "'DM Sans', sans-serif",
-                      }}>
-                      {opt}
-                    </button>
-                  );
-                })}
-
-                {quizAnswer !== null && (
-                  <div style={{ background: "#0f2010", border: "1px solid #22c55e33", borderRadius: 10, padding: 14, marginBottom: 14 }}>
-                    <p style={{ fontSize: 12, color: "#86efac", lineHeight: 1.6 }}>
-                      💡 {QUIZ[quizIdx].expl}
-                    </p>
-                  </div>
-                )}
-
-                {quizAnswer !== null && (
-                  <button onClick={nextQuestion} style={{
-                    width: "100%", background: "#c9a227", color: "#111827", border: "none", borderRadius: 10,
-                    padding: "13px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
-                  }}>
-                    {quizIdx + 1 >= QUIZ.length ? "Voir les résultats" : "Question suivante →"}
-                  </button>
-                )}
-              </div>
-            )}
-
-            {tab === "quiz" && quizDone && (
-              <div className="quiz-container" style={{ textAlign: "center", paddingTop: 40 }}>
-                <div style={{ fontSize: 64, marginBottom: 16 }}>
-                  {quizScore >= 4 ? "🏆" : quizScore >= 3 ? "😎" : "📚"}
-                </div>
-                <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 28, color: "#c9a227", marginBottom: 8 }}>
-                  {quizScore}/{QUIZ.length}
-                </h2>
-                <p style={{ color: "#94a3b8", marginBottom: 28, fontSize: 14 }}>
-                  {quizScore >= 4 ? "Excellent ! Tu maîtrises bien les bases." :
-                   quizScore >= 3 ? "Pas mal ! Continue à réviser." :
-                   "Reprends les sections et réessaie !"}
-                </p>
-                <button onClick={resetQuiz} style={{
-                  background: "#c9a227", color: "#111827", border: "none", borderRadius: 10,
-                  padding: "13px 32px", fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
-                }}>
-                  Recommencer
-                </button>
-              </div>
-            )}
-
-            {/* PLAY TAB */}
-            {tab === "play" && <PokerGame />}
-
+              <span style={{ fontSize: 11, color: "#8899bb" }}>{hand.short}</span>
+            </div>
           </div>
-          </div> {/* fin poker-content */}
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function PositionsTab() {
+  return (
+    <div>
+      <SectionTitle>Positions</SectionTitle>
+      <p style={{ fontSize: 12, color: "#8899bb", marginBottom: 12, textAlign: "center" }}>
+        La position est cruciale au poker
+      </p>
+      <div style={{
+        background: "#0f2010", border: "3px solid #1a4020", borderRadius: 60,
+        padding: "20px 14px", marginBottom: 20,
+        display: "flex", alignItems: "center", justifyContent: "center",
+      }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center" }}>
+          {POSITIONS.map((p, i) => (
+            <div key={i} style={{
+              background: p.color + "22", border: `1px solid ${p.color}66`, borderRadius: 8,
+              padding: "6px 12px", fontSize: 12, fontWeight: 700, color: p.color,
+            }}>{p.name}</div>
+          ))}
         </div>
       </div>
 
-      {/* Mobile tab bar — sticky bottom */}
-      <nav className="poker-tabs-bar">
-        {tabs.map(t => (
-          <button key={t.id} className="tab-btn" onClick={() => { setTab(t.id); setSelectedHand(null); }}
-            style={{
-              flex: 1, padding: "10px 4px", background: "none", border: "none", cursor: "pointer",
-              color: tab === t.id ? "#c9a227" : "#8899bb", fontSize: 10, fontWeight: 600,
-              display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
-              fontFamily: "'DM Sans', sans-serif",
-            }}>
-            <span style={{ fontSize: 18 }}>{t.icon}</span>
+      <div className="pk-positions-grid">
+        {POSITIONS.map((p, i) => (
+          <div key={i} style={{
+            background: "#1c2333", border: `1px solid ${p.color}33`, borderRadius: 10,
+            padding: "14px 16px",
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+              <div style={{
+                background: p.color + "22", color: p.color, fontWeight: 800, fontSize: 13,
+                padding: "3px 10px", borderRadius: 20,
+              }}>{p.name}</div>
+              <span style={{ fontSize: 11, color: "#8899bb" }}>{p.full}</span>
+            </div>
+            <p style={{ fontSize: 12, color: "#cbd5e1", lineHeight: 1.5 }}>{p.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ background: "#c9a22712", border: "1px solid #c9a22730", borderRadius: 10, padding: 14, marginTop: 12 }}>
+        <p style={{ fontSize: 12, color: "#cbd5e1", lineHeight: 1.6 }}>
+          💡 <strong style={{ color: "#c9a227" }}>Règle d'or :</strong> Plus tu parles tard, plus tu as d'informations.
+          Joue des ranges plus larges en position, plus serrées hors position.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function GlossaryTab() {
+  const [search, setSearch] = useState("");
+  const filtered = GLOSSARY.filter(g =>
+    g.term.toLowerCase().includes(search.toLowerCase()) ||
+    g.def.toLowerCase().includes(search.toLowerCase())
+  );
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      <SectionTitle>Glossaire</SectionTitle>
+      <input
+        value={search} onChange={e => setSearch(e.target.value)}
+        placeholder="Rechercher un terme…"
+        style={{
+          width: "100%", padding: "10px 14px", borderRadius: 10,
+          background: "#1c2333", border: "1px solid #2d3a5a",
+          color: "#e2e8f0", fontSize: 14, outline: "none",
+          fontFamily: "'DM Sans', sans-serif", boxSizing: "border-box",
+        }}
+      />
+      <div className="pk-glossary-grid">
+        {filtered.map((g, i) => (
+          <div key={i} style={{
+            background: "#1c2333", border: "1px solid #2d3a5a", borderRadius: 10,
+            padding: "12px 14px",
+          }}>
+            <div style={{ fontWeight: 700, color: "#c9a227", fontSize: 14, marginBottom: 4 }}>{g.term}</div>
+            <p style={{ fontSize: 12, color: "#94a3b8", lineHeight: 1.5, margin: 0 }}>{g.def}</p>
+          </div>
+        ))}
+      </div>
+      {filtered.length === 0 && (
+        <p style={{ textAlign: "center", color: "#8899bb", marginTop: 20 }}>Aucun résultat.</p>
+      )}
+    </div>
+  );
+}
+
+function QuizTab() {
+  const [idx, setIdx] = useState(0);
+  const [answer, setAnswer] = useState(null);
+  const [score, setScore] = useState(0);
+  const [done, setDone] = useState(false);
+
+  function pick(i) {
+    if (answer !== null) return;
+    setAnswer(i);
+    if (i === QUIZ[idx].answer) setScore(s => s + 1);
+  }
+
+  function next() {
+    if (idx + 1 >= QUIZ.length) { setDone(true); return; }
+    setIdx(i => i + 1);
+    setAnswer(null);
+  }
+
+  function restart() { setIdx(0); setAnswer(null); setScore(0); setDone(false); }
+
+  if (done) {
+    const pct = Math.round((score / QUIZ.length) * 100);
+    return (
+      <div className="pk-quiz-container" style={{ textAlign: "center", paddingTop: 40 }}>
+        <div style={{ fontSize: 64, marginBottom: 16 }}>
+          {score >= 4 ? "🏆" : score >= 3 ? "😎" : "📚"}
+        </div>
+        <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 28, color: "#c9a227", marginBottom: 8 }}>
+          {score}/{QUIZ.length}
+        </h2>
+        <p style={{ color: "#94a3b8", marginBottom: 28, fontSize: 14 }}>
+          {score >= 4 ? "Excellent ! Tu maîtrises bien les bases." :
+           score >= 3 ? "Pas mal ! Continue à réviser." :
+           "Reprends les sections et réessaie !"}
+        </p>
+        <button onClick={restart} style={{
+          background: "#c9a227", color: "#111827", border: "none", borderRadius: 10,
+          padding: "13px 32px", fontSize: 14, fontWeight: 700, cursor: "pointer",
+          fontFamily: "'DM Sans', sans-serif",
+        }}>
+          Recommencer
+        </button>
+      </div>
+    );
+  }
+
+  const q = QUIZ[idx];
+  return (
+    <div className="pk-quiz-container">
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+        <SectionTitle>Quiz</SectionTitle>
+        <span style={{ fontSize: 12, color: "#8899bb" }}>{idx + 1} / {QUIZ.length}</span>
+      </div>
+
+      <div style={{ background: "#2d3a5a", borderRadius: 4, height: 4, marginBottom: 20 }}>
+        <div style={{
+          background: "#c9a227", height: 4, borderRadius: 4,
+          width: `${((idx + (answer !== null ? 1 : 0)) / QUIZ.length) * 100}%`,
+          transition: "width 0.3s",
+        }} />
+      </div>
+
+      <div style={{ background: "#1c2333", borderRadius: 12, padding: 18, marginBottom: 16, border: "1px solid #2d3a5a" }}>
+        <p style={{ fontSize: 14, color: "#e2e8f0", lineHeight: 1.6 }}>{q.q}</p>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        {q.options.map((opt, i) => {
+          let bg = "#1c2333", border = "#2d3a5a", color = "#e2e8f0";
+          if (answer !== null) {
+            if (i === q.answer) { bg = "#14532d"; border = "#22c55e"; color = "#22c55e"; }
+            else if (i === answer) { bg = "#450a0a"; border = "#ef4444"; color = "#ef4444"; }
+          }
+          return (
+            <button key={i} className="pk-ans-btn" onClick={() => pick(i)} disabled={answer !== null}
+              style={{
+                width: "100%", background: bg, border: `1px solid ${border}`,
+                borderRadius: 10, padding: "13px 16px",
+                cursor: answer !== null ? "default" : "pointer",
+                color, fontSize: 13, textAlign: "left", fontFamily: "'DM Sans', sans-serif",
+                transition: "all 0.2s",
+              }}>
+              {opt}
+            </button>
+          );
+        })}
+      </div>
+
+      {answer !== null && (
+        <div style={{ background: "#1c2333", borderRadius: 12, padding: "14px 18px", marginTop: 14, border: "1px solid #2d3a5a" }}>
+          <strong style={{ color: "#c9a227" }}>Explication : </strong>
+          <span style={{ fontSize: 13, color: "#c8d6f0", lineHeight: 1.7 }}>{q.expl}</span>
+        </div>
+      )}
+
+      {answer !== null && (
+        <button onClick={next} style={{
+          marginTop: 14, padding: "10px 28px", borderRadius: 8, border: "none",
+          background: "#c9a227", color: "#111827", cursor: "pointer",
+          fontSize: 14, fontWeight: 700, fontFamily: "'DM Sans', sans-serif",
+          display: "block", marginLeft: "auto", marginRight: "auto",
+        }}>
+          {idx + 1 >= QUIZ.length ? "Voir les résultats" : "Question suivante →"}
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ─── Main App ────────────────────────────────────────────────────────────────
+
+const TABS = [
+  { id: "rules",     label: "Règles",    icon: "📋" },
+  { id: "hands",     label: "Mains",     icon: "🃏" },
+  { id: "positions", label: "Positions", icon: "🎯" },
+  { id: "glossary",  label: "Glossaire", icon: "📖" },
+  { id: "quiz",      label: "Quiz",      icon: "⚡" },
+  { id: "play",      label: "Jouer",     icon: "🎮" },
+];
+
+export default function PokerApp({ onBack }) {
+  const [tab, setTab] = useState("rules");
+
+  return (
+    <div className="pk-layout">
+      {/* Header */}
+      <header className="pk-header">
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontSize: 24 }}>♠</span>
+          <span style={{
+            fontFamily: "'DM Serif Display', serif",
+            fontSize: 18, color: "#c9a227",
+          }}>
+            Poker
+          </span>
+        </div>
+        {onBack && (
+          <button onClick={onBack} style={{
+            background: "none", border: "1px solid #2d3a5a", borderRadius: 8,
+            color: "#8899bb", cursor: "pointer", padding: "6px 14px", fontSize: 13,
+          }}>
+            ← Accueil
+          </button>
+        )}
+      </header>
+
+      <div className="pk-body">
+        {/* Sidebar desktop */}
+        <nav className="pk-sidebar">
+          {TABS.map(t => (
+            <button
+              key={t.id}
+              className={`pk-sidebar-btn${tab === t.id ? " active" : ""}`}
+              onClick={() => setTab(t.id)}
+            >
+              <span>{t.icon}</span>
+              <span>{t.label}</span>
+            </button>
+          ))}
+        </nav>
+
+        {/* Content */}
+        <main className="pk-content">
+          <div className="pk-inner">
+            {tab === "rules"     && <RulesTab />}
+            {tab === "hands"     && <HandsTab />}
+            {tab === "positions" && <PositionsTab />}
+            {tab === "glossary"  && <GlossaryTab />}
+            {tab === "quiz"      && <QuizTab />}
+            {tab === "play"      && <PokerGame />}
+          </div>
+        </main>
+      </div>
+
+      {/* Mobile tab bar */}
+      <nav className="pk-tabbar">
+        {TABS.map(t => (
+          <button
+            key={t.id}
+            className={`pk-tab-btn${tab === t.id ? " active" : ""}`}
+            onClick={() => setTab(t.id)}
+          >
+            <span className="pk-tab-icon">{t.icon}</span>
             {t.label}
           </button>
         ))}
       </nav>
     </div>
-  )
+  );
 }
