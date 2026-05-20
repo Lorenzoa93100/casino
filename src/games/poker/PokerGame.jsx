@@ -811,7 +811,7 @@ function GameScreen({ game, setGame, onBack, onNextHand }) {
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function PokerGame() {
-  const [screen, setScreen] = useState('menu'); // 'menu' | 'game'
+  const [screen, setScreen] = useState('menu'); // 'menu' | 'game' | 'gameover'
   const [game, setGame] = useState(null);
 
   const handleStart = (difficulty) => {
@@ -827,8 +827,18 @@ export default function PokerGame() {
 
   const handleNextHand = () => {
     if (!game) return;
+    const human = game.players.find(p => !p.isBot);
+    if (!human || human.chips <= 0) {
+      setScreen('gameover');
+      return;
+    }
     const g = createGame(game.difficulty, game);
     setGame(g);
+  };
+
+  const handleRestart = () => {
+    setGame(null);
+    setScreen('menu');
   };
 
   return (
@@ -839,6 +849,27 @@ export default function PokerGame() {
       minHeight: 400,
     }}>
       {screen === 'menu' && <MenuScreen onStart={handleStart} />}
+
+      {screen === 'gameover' && (
+        <div style={{ textAlign: 'center', padding: '52px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+          <div style={{ fontSize: 60 }}>💸</div>
+          <p style={{ fontSize: 20, fontWeight: 700, color: '#f1f5f9', margin: 0 }}>Plus de chips !</p>
+          <p style={{ fontSize: 13, color: '#94a3b8', margin: 0 }}>Retentez votre chance avec une nouvelle partie.</p>
+          <button
+            onClick={handleRestart}
+            style={{
+              marginTop: 8,
+              padding: '13px 36px', borderRadius: 10, border: 'none',
+              background: '#c9a227', color: '#111827',
+              fontSize: 15, fontWeight: 700, cursor: 'pointer',
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            Recommencer
+          </button>
+        </div>
+      )}
+
       {screen === 'game' && game && (
         <GameScreen
           game={game}

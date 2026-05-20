@@ -506,6 +506,20 @@
 }
 .rl-clear-btn:hover { opacity: 0.8; }
 
+/* ─── Écran Game Over ───────────────────────────────────────────────────────── */
+.rl-gameover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 20px;
+  text-align: center;
+}
+.rl-gameover-emoji  { font-size: 56px; }
+.rl-gameover-title  { font-size: 20px; font-weight: 700; color: #f1f5f9; margin: 0; }
+.rl-gameover-sub    { font-size: 13px; color: #94a3b8; margin: 0; }
+
 /* Bouton Recharger (solde épuisé) */
 .rl-reload-btn {
   padding: 12px 24px;

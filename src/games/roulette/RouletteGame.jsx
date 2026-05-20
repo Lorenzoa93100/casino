@@ -11,10 +11,8 @@ const CHIPS = [
   { value: 500, color: '#7c3aed', border: '#5b21b6', textColor: '#fff' },
 ]
 
-// Couleurs des numéros sur la grille de mise
 const SEG_COLORS = { green: '#16a34a', red: '#dc2626', black: '#1a1a1a' }
 
-// Colonnes de la grille (haut→bas = 3,6,9… | 2,5,8… | 1,4,7…)
 const GRID_COLS = [
   [3,6,9,12,15,18,21,24,27,30,33,36],
   [2,5,8,11,14,17,20,23,26,29,32,35],
@@ -36,7 +34,8 @@ export default function RouletteGame() {
   function totalBet() { return bets.reduce((s, b) => s + b.amount, 0) }
 
   function addBet(betDef) {
-    if (spinning) return
+    // Block if spinning OR not enough balance for the selected chip
+    if (spinning || balance < selectedChip) return
     const key = getBetKey(betDef)
     setBets(prev => {
       const existing = prev.find(b => getBetKey(b) === key)
@@ -75,6 +74,16 @@ export default function RouletteGame() {
     addBet({ type: 'straight', label: `Plein ${n}`, numbers: [n] })
   }
 
+  function restart() {
+    setBalance(1000)
+    setBets([])
+    setResultInfo(null)
+    setPendingResult(null)
+  }
+
+  // ── Game over: no balance, no active bets, wheel stopped ─────────────────────
+  const isGameOver = balance <= 0 && bets.length === 0 && !spinning
+
   return (
     <div className="rl-game-wrap">
 
@@ -109,110 +118,120 @@ export default function RouletteGame() {
         {/* COLONNE DROITE — jetons + table + boutons */}
         <div className="rl-table-col">
 
-          {/* Sélecteur de jetons */}
-          <div className="rl-chip-row">
-            <span className="rl-chip-label">Jetons :</span>
-            {CHIPS.map(ch => (
-              <button
-                key={ch.value}
-                className={`rl-chip-btn${selectedChip === ch.value ? ' rl-chip-active' : ''}`}
-                onClick={() => setSelectedChip(ch.value)}
-                style={{ background: ch.color, color: ch.textColor, borderColor: selectedChip === ch.value ? '#fff' : ch.border }}
-              >
-                {ch.value}
+          {isGameOver ? (
+
+            /* ── ÉCRAN GAME OVER ─────────────────────────────────────────── */
+            <div className="rl-gameover">
+              <div className="rl-gameover-emoji">💸</div>
+              <p className="rl-gameover-title">Plus de solde !</p>
+              <p className="rl-gameover-sub">Retentez votre chance avec 1 000€.</p>
+              <button className="rl-spin-btn" onClick={restart}>
+                Recommencer
               </button>
-            ))}
-          </div>
-
-          {/* Table de mise (fond vert feutré) */}
-          <div className="rl-betting-table">
-
-            {/* Zéro */}
-            <div className="rl-zero-row">
-              <div className="rl-num-cell rl-num-zero" onClick={() => numBet(0)}>0</div>
             </div>
 
-            {/* Grille des numéros 1–36 */}
-            <div className="rl-grid-row">
-              {GRID_COLS.map((col, ci) => (
-                <div key={ci} className="rl-grid-col">
-                  {col.map(n => {
-                    const hasBet = bets.some(b => b.type === 'straight' && b.numbers[0] === n)
+          ) : (
+
+            /* ── JEU NORMAL ──────────────────────────────────────────────── */
+            <>
+              {/* Sélecteur de jetons */}
+              <div className="rl-chip-row">
+                <span className="rl-chip-label">Jetons :</span>
+                {CHIPS.map(ch => (
+                  <button
+                    key={ch.value}
+                    className={`rl-chip-btn${selectedChip === ch.value ? ' rl-chip-active' : ''}`}
+                    onClick={() => setSelectedChip(ch.value)}
+                    style={{
+                      background: ch.color,
+                      color: ch.textColor,
+                      borderColor: selectedChip === ch.value ? '#fff' : ch.border,
+                      opacity: ch.value > balance ? 0.35 : 1,
+                    }}
+                  >
+                    {ch.value}
+                  </button>
+                ))}
+              </div>
+
+              {/* Table de mise */}
+              <div className="rl-betting-table">
+
+                <div className="rl-zero-row">
+                  <div className="rl-num-cell rl-num-zero" onClick={() => numBet(0)}>0</div>
+                </div>
+
+                <div className="rl-grid-row">
+                  {GRID_COLS.map((col, ci) => (
+                    <div key={ci} className="rl-grid-col">
+                      {col.map(n => {
+                        const hasBet = bets.some(b => b.type === 'straight' && b.numbers[0] === n)
+                        return (
+                          <div
+                            key={n}
+                            className={`rl-num-cell${hasBet ? ' rl-num-bet' : ''}`}
+                            onClick={() => numBet(n)}
+                            style={{ background: SEG_COLORS[getColor(n)] }}
+                          >
+                            {n}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="rl-dozens-row">
+                  {[['1ère douzaine',[1,12]],['2ème douzaine',[13,24]],['3ème douzaine',[25,36]]].map(([label, nums]) => {
+                    const active = bets.some(b => b.type === 'dozen' && b.numbers[0] === nums[0])
                     return (
-                      <div
-                        key={n}
-                        className={`rl-num-cell${hasBet ? ' rl-num-bet' : ''}`}
-                        onClick={() => numBet(n)}
-                        style={{ background: SEG_COLORS[getColor(n)] }}
-                      >
-                        {n}
-                      </div>
+                      <button key={label}
+                        className={`rl-outside-btn${active ? ' rl-outside-active' : ''}`}
+                        onClick={() => addBet({ type: 'dozen', label, numbers: nums })}>
+                        {label} <span className="rl-payout-hint">2:1</span>
+                      </button>
                     )
                   })}
                 </div>
-              ))}
-            </div>
 
-            {/* Douzaines */}
-            <div className="rl-dozens-row">
-              {[['1ère douzaine',[1,12]],['2ème douzaine',[13,24]],['3ème douzaine',[25,36]]].map(([label, nums]) => {
-                const active = bets.some(b => b.type === 'dozen' && b.numbers[0] === nums[0])
-                return (
-                  <button key={label}
-                    className={`rl-outside-btn${active ? ' rl-outside-active' : ''}`}
-                    onClick={() => addBet({ type: 'dozen', label, numbers: nums })}>
-                    {label} <span className="rl-payout-hint">2:1</span>
-                  </button>
-                )
-              })}
-            </div>
+                <div className="rl-even-row">
+                  {[
+                    { type:'low',   label:'Manque',  sub:'1-18'  },
+                    { type:'even',  label:'Pair',    sub:null     },
+                    { type:'red',   label:'Rouge',   sub:null, cls:'rl-red-btn'   },
+                    { type:'black', label:'Noir',    sub:null, cls:'rl-black-btn' },
+                    { type:'odd',   label:'Impair',  sub:null     },
+                    { type:'high',  label:'Passe',   sub:'19-36'  },
+                  ].map(({ type, label, sub, cls }) => {
+                    const active = bets.some(b => b.type === type)
+                    return (
+                      <button key={type}
+                        className={`rl-outside-btn${cls ? ' ' + cls : ''}${active ? ' rl-outside-active' : ''}`}
+                        onClick={() => addBet({ type, label: sub ? `${label} ${sub}` : label, numbers: [] })}>
+                        <span>{label}</span>
+                        {sub && <span className="rl-sub">{sub}</span>}
+                        <span className="rl-payout-hint">1:1</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
 
-            {/* Chances simples */}
-            <div className="rl-even-row">
-              {[
-                { type:'low',   label:'Manque',  sub:'1-18'  },
-                { type:'even',  label:'Pair',    sub:null     },
-                { type:'red',   label:'Rouge',   sub:null, cls:'rl-red-btn'   },
-                { type:'black', label:'Noir',    sub:null, cls:'rl-black-btn' },
-                { type:'odd',   label:'Impair',  sub:null     },
-                { type:'high',  label:'Passe',   sub:'19-36'  },
-              ].map(({ type, label, sub, cls }) => {
-                const active = bets.some(b => b.type === type)
-                return (
-                  <button key={type}
-                    className={`rl-outside-btn${cls ? ' ' + cls : ''}${active ? ' rl-outside-active' : ''}`}
-                    onClick={() => addBet({ type, label: sub ? `${label} ${sub}` : label, numbers: [] })}>
-                    <span>{label}</span>
-                    {sub && <span className="rl-sub">{sub}</span>}
-                    <span className="rl-payout-hint">1:1</span>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
+              {bets.length > 0 && (
+                <p className="rl-bets-summary">
+                  {bets.map(b => `${b.label} (${b.amount}€)`).join(' · ')}
+                </p>
+              )}
 
-          {/* Résumé des mises actives */}
-          {bets.length > 0 && (
-            <p className="rl-bets-summary">
-              {bets.map(b => `${b.label} (${b.amount}€)`).join(' · ')}
-            </p>
-          )}
-
-          {/* Actions */}
-          <div className="rl-actions-row">
-            <button className="rl-spin-btn" onClick={handleSpin} disabled={spinning || bets.length === 0}>
-              {spinning ? 'La bille tourne…' : '🎰 Lancer'}
-            </button>
-            {bets.length > 0 && !spinning && (
-              <button className="rl-clear-btn" onClick={clearBets}>Effacer</button>
-            )}
-          </div>
-
-          {balance <= 0 && bets.length === 0 && (
-            <button className="rl-reload-btn"
-              onClick={() => { setBalance(1000); setBets([]); setResultInfo(null) }}>
-              Recharger (1000€)
-            </button>
+              <div className="rl-actions-row">
+                <button className="rl-spin-btn" onClick={handleSpin} disabled={spinning || bets.length === 0}>
+                  {spinning ? 'La bille tourne…' : '🎰 Lancer'}
+                </button>
+                {bets.length > 0 && !spinning && (
+                  <button className="rl-clear-btn" onClick={clearBets}>Effacer</button>
+                )}
+              </div>
+            </>
           )}
         </div>
       </div>
