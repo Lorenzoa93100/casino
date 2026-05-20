@@ -73,8 +73,12 @@ export function explainResult(result, breakdown) {
   if (dozen) lines.push(`Il appartient à la ${dozen} et à la ${col}.`)
 
   for (const { bet, won, gain } of breakdown) {
-    const sign = gain > 0 ? `+${gain}` : `${gain}`
-    lines.push(`${won ? '✅' : '❌'} Mise "${bet.label}" (${bet.amount}€) → ${sign}€`)
+    if (won) {
+      const totalReturned = bet.amount + gain
+      lines.push(`✅ Mise "${bet.label}" (${bet.amount}€) → **+${gain}€** de gain — vous récupérez **${totalReturned}€**`)
+    } else {
+      lines.push(`❌ Mise "${bet.label}" (${bet.amount}€) → ${gain}€`)
+    }
   }
   return lines
 }

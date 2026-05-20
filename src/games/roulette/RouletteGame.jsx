@@ -106,7 +106,7 @@ export default function RouletteGame() {
           {resultInfo && (
             <div className={`rl-result-box rl-result-card ${resultInfo.net > 0 ? 'rl-result-win' : resultInfo.net < 0 ? 'rl-result-lose' : ''}`}>
               <p className="rl-result-headline">
-                {resultInfo.net > 0 ? `+${resultInfo.net}€ — Gagné !` : resultInfo.net < 0 ? `${resultInfo.net}€ — Perdu` : 'Égalité'}
+                {resultInfo.net > 0 ? `+${resultInfo.net}€ de gain — Gagné !` : resultInfo.net < 0 ? `${resultInfo.net}€ — Perdu` : 'Égalité'}
               </p>
               {resultInfo.lines.map((l, i) => (
                 <p key={i} className={i === 0 ? 'rl-result-primary' : 'rl-result-secondary'}
