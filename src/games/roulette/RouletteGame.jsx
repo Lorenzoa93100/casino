@@ -47,7 +47,8 @@ export default function RouletteGame() {
 
   function clearBets() {
     if (spinning) return
-    setBalance(b => b + totalBet())
+    const stake = bets.reduce((s, b) => s + b.amount, 0)
+    setBalance(b => b + stake)
     setBets([])
     setResultInfo(null)
   }
@@ -63,9 +64,10 @@ export default function RouletteGame() {
   function handleSpinEnd() {
     setSpinning(false)
     const r = pendingResult
+    const stake = bets.reduce((s, b) => s + b.amount, 0)
     const { net, breakdown } = evaluateBets(bets, r)
     const lines = explainResult(r, breakdown)
-    setBalance(b => b + net + totalBet())
+    setBalance(prev => prev + net + stake)
     setResultInfo({ net, lines })
     setBets([])
   }
