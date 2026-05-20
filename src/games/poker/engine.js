@@ -232,13 +232,15 @@ export function createGame(difficulty, prevGame) {
   } else {
     players = [
       { id: 0, name: 'Toi', isBot: false, chips: CHIPS, holeCards: [], roundBet: 0, folded: false, allIn: false },
-      { id: 1, name: 'Alex', isBot: true, chips: CHIPS, holeCards: [], roundBet: 0, folded: false, allIn: false },
-      { id: 2, name: 'Sam', isBot: true, chips: CHIPS, holeCards: [], roundBet: 0, folded: false, allIn: false },
+      { id: 1, name: 'Yanis', isBot: true, chips: CHIPS, holeCards: [], roundBet: 0, folded: false, allIn: false },
+      { id: 2, name: 'Mila', isBot: true, chips: CHIPS, holeCards: [], roundBet: 0, folded: false, allIn: false },
     ];
   }
 
-  const prevDealer = prevGame ? prevGame.dealerIndex : -1;
-  const dealerIndex = (prevDealer + 1) % players.length;
+  const prevDealer = prevGame ? prevGame.dealerIndex : null;
+  const dealerIndex = prevDealer !== null
+    ? (prevDealer + 1) % players.length
+    : Math.floor(Math.random() * players.length);
   const sbIndex = (dealerIndex + 1) % players.length;
   const bbIndex = (dealerIndex + 2) % players.length;
 

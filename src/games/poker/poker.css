@@ -10,7 +10,7 @@
 .pk-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
   padding: 14px 20px;
   background: #111827;
   border-bottom: 1px solid #334155;

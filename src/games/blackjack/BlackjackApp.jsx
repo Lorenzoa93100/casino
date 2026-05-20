@@ -523,23 +523,22 @@ export default function BlackjackApp({ onBack }) {
       <div className="bj-layout">
         {/* Header */}
         <header className="bj-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 24 }}>🃏</span>
-            <span style={{
-              fontFamily: "'DM Serif Display', serif",
-              fontSize: 18, color: '#c9a227',
-            }}>
-              Blackjack
-            </span>
-          </div>
           {onBack && (
             <button onClick={onBack} style={{
               background: 'none', border: '1px solid #2d3a5a', borderRadius: 8,
               color: '#8899bb', cursor: 'pointer', padding: '6px 14px', fontSize: 13,
+              flexShrink: 0,
             }}>
               ← Accueil
             </button>
           )}
+          <span style={{ fontSize: 24 }}>🃏</span>
+          <span style={{
+            fontFamily: "'DM Serif Display', serif",
+            fontSize: 18, color: '#c9a227',
+          }}>
+            Blackjack
+          </span>
         </header>
 
         <div className="bj-body">

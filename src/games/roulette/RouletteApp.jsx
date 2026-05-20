@@ -218,11 +218,12 @@ export default function RouletteApp({ onBack }) {
       {/* Header */}
       <header className="rl-header">
         <button onClick={onBack} style={{
-          background:'none', border:'none', color:'#8899bb', cursor:'pointer',
-          fontSize:20, lineHeight:1, padding:'4px 8px', display:'flex', alignItems:'center',
-        }}>←</button>
+          background: 'none', border: '1px solid #2d3a5a', borderRadius: 8,
+          color: '#8899bb', cursor: 'pointer', padding: '6px 14px', fontSize: 13,
+          flexShrink: 0,
+        }}>← Accueil</button>
         <span style={{ fontSize:20 }}>🎡</span>
-        <h1 style={{ margin:0, fontSize:18, fontWeight:700, color:'#e2e8f0' }}>Roulette</h1>
+        <span style={{ fontFamily:"'DM Serif Display', serif", fontSize:18, color:'#c9a227' }}>Roulette</span>
       </header>
 
       <div className="rl-body">
