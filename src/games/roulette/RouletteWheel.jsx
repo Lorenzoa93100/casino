@@ -79,11 +79,14 @@ export default function RouletteWheel({ spinning, result, onSpinEnd }) {
     if (rafRef.current) cancelAnimationFrame(rafRef.current)
 
     // ── Wheel target rotation ─────────────────────────────────────────────────
-    const idx        = WHEEL_SEQUENCE.indexOf(result)
-    const stepDeg    = 360 / SEG_COUNT
+    const idx         = WHEEL_SEQUENCE.indexOf(result)
+    const stepDeg     = 360 / SEG_COUNT
     const segAngleDeg = idx * stepDeg + stepDeg / 2
-    const extra       = (360 - segAngleDeg + 360) % 360
-    const wheelTarget = wheelAngleRef.current + 5 * 360 + extra
+    // Compensate for accumulated rotation so the winning segment always ends at 12 o'clock.
+    // Without subtracting currentAngle every spin after the first lands on the wrong segment.
+    const currentAngle = wheelAngleRef.current % 360
+    const extra        = ((360 - segAngleDeg) - currentAngle + 720) % 360
+    const wheelTarget  = wheelAngleRef.current + 5 * 360 + extra
     wheelAngleRef.current = wheelTarget
     setWheelAngle(wheelTarget)
     setBallPos(null)
