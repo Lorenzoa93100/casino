@@ -60,8 +60,6 @@ export default function RouletteWheel({ spinning, result, onSpinEnd }) {
   const angleRef = useRef(0)
   const [ballSpinning, setBallSpinning] = useState(false)
   const [ballSettled, setBallSettled] = useState(false)
-  const [ballAngle, setBallAngle] = useState(0)
-  // Toujours garder la dernière version de onSpinEnd pour éviter les closures périmées
   const onSpinEndRef = useRef(onSpinEnd)
   useEffect(() => { onSpinEndRef.current = onSpinEnd })
 
@@ -72,7 +70,7 @@ export default function RouletteWheel({ spinning, result, onSpinEnd }) {
     const step = 360 / SEG_COUNT
     const segAngle = idx * step + step / 2
 
-    // 5 tours complets + décalage pour amener le résultat sous l'indicateur
+    // 5 tours complets + décalage pour amener le résultat sous l'indicateur (12h)
     const extra = (360 - segAngle + 360) % 360
     const target = angleRef.current + 5 * 360 + extra
     angleRef.current = target
@@ -80,13 +78,11 @@ export default function RouletteWheel({ spinning, result, onSpinEnd }) {
     setBallSpinning(true)
     setBallSettled(false)
 
-    // setTimeout au lieu de onTransitionEnd — plus fiable sur SVG et mobile
     const timer = setTimeout(() => {
       setBallSpinning(false)
       setBallSettled(true)
-      setBallAngle(idx * step + step / 2)
       onSpinEndRef.current?.()
-    }, 5800) // 5.5s animation + 300ms marge
+    }, 5800)
 
     return () => clearTimeout(timer)
   }, [spinning, result])
@@ -157,7 +153,7 @@ export default function RouletteWheel({ spinning, result, onSpinEnd }) {
           top: '50%', left: '50%',
           width: 12, height: 12,
           marginTop: -6, marginLeft: -6,
-          animation: 'roulBallOrbit 0.35s linear infinite reverse',
+          animation: 'roulBallOrbit 0.35s linear infinite',
           pointerEvents: 'none',
         }}>
           <div style={{
@@ -174,7 +170,7 @@ export default function RouletteWheel({ spinning, result, onSpinEnd }) {
           top: '50%', left: '50%',
           width: 12, height: 12,
           marginTop: -6, marginLeft: -6,
-          transform: `rotate(${ballAngle - angle % 360}deg) translateX(100px)`,
+          transform: 'rotate(-90deg) translateX(100px)',
           pointerEvents: 'none',
         }}>
           <div style={{
